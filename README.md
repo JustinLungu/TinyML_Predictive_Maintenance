@@ -7,3 +7,6 @@ possibly useful links to check out in the future when deploying:
 - https://towardsdatascience.com/anomaly-detection-in-time-series-sensor-data-86fd52e62538
 - https://paperswithcode.com/paper/lstm-based-encoder-decoder-for-multi-sensor
 - https://www.youtube.com/watch?v=TgekTwrftcg&list=PL7VEa1KauMQqZFj_nWRfsCZNXaBbkuurG (important videos from the playlist: 1.3.1, 1.4.2, 1.4.3)
+
+
+Idea for feature extraction: https://en.wikipedia.org/wiki/Kalman_filter
