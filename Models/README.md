@@ -1,5 +1,7 @@
 Here are the models that we trained:
 - autoencoder.tflite is the TFLite version of the NON-quantized autoencoder (trained in the autoencoder_v1.ipynb)
+- autoencoder.cc the file containing the binary representation of the non-quantized autoencoder
+
   
 - cnn.tflite is the TFLite version of the NON-quantized CNN (trained in the cnn.ipynb)
 - cnn.cc is the file containing the binary representation of the non-quantized CNN
