@@ -12,4 +12,6 @@ TO DO:
         - see if we can make the quantized version of the model work
         - measure inference speed
 
-TO REVIEW:  How can we see how much RAM we need? What do we need to consider going forward?
+TO REVIEW:  
+
+        - How can we see how much RAM we need? What do we need to consider going forward?
