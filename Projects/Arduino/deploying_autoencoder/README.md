@@ -13,6 +13,9 @@ TO DO:
        - measure inference speed
        
 
-TO REVIEW: (same as CNN) How can we see how much RAM we need? What do we need to consider going forward?
-            We need to (?) compare the original and reconstructed values in order to see if the vibration is normal or anomalous (too much difference means anomaly). What classifies as too much difference? How do you measure that? Over how many readings should one "classification" be done? 
+TO REVIEW: 
+       
+       - (same as CNN) How can we see how much RAM we need? What do we need to consider going forward?
+       
+       - We need to (?) compare the original and reconstructed values in order to see if the vibration is normal or anomalous (too much difference means anomaly). What classifies as too much difference? How do you measure that? Over how many readings should one "classification" be done? 
            
