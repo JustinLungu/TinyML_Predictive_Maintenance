@@ -6,7 +6,9 @@ A slice of (already normalized) data is hardcoded and usedto run one inference. 
 
 From the testing we have done so far, it seems to work correctly.
 
-TO DO:  - add data normalization steps
+TO DO:  
+
+        - add data normalization steps
         - see if we can make the quantized version of the model work
         - measure inference speed
 
