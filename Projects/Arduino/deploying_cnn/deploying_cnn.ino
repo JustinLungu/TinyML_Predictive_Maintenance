@@ -23,8 +23,11 @@ namespace{
 
   // Set aside some memory (arena) - used to perform calculations and store the input and output buffers
   // if there are issues allocatingmemory in the code - might be from here, make the number higher
-  constexpr int kTensorArenaSize = 2000;
+  constexpr int kTensorArenaSize = 20000;
   alignas(16) uint8_t tensor_arena[kTensorArenaSize]; //uint8_t tensor_arena[kTensorArenaSize];;// idk what the differrence here is and what the stuff does so just try both
+
+  int label_argmax;
+  float max_confidence;
 }
 
 
@@ -102,6 +105,8 @@ void loop() {
 
 
   // Dummy data to run inference on
+/*
+ // class 3
   float inputData[24][3] = {
     {0.03, -0.07, 0.70},
     {-0.10, 0.04, 1.20},
@@ -127,6 +132,66 @@ void loop() {
     {-0.08, 0.03, 1.18},
     {0.02, -0.06, 0.77}
   };
+*/
+  // class 2
+
+  float inputData[24][3] = {
+    {0.1, 0.71428571, 0.61904762},
+    {0.2, 0.85714286, 0.9047619},
+    {0.9, 0.14285714, 0.14285714},
+    {0.1, 0.71428571, 0.66666667},
+    {0.1, 1.0, 0.95238095},
+    {1.0, 0.0, 0.0},
+    {0.1, 0.71428571, 0.76190476},
+    {0.3, 0.85714286, 0.80952381},
+    {0.9, 0.14285714, 0.14285714},
+    {0.1, 0.71428571, 0.61904762},
+    {0.2, 0.85714286, 0.95238095},
+    {0.9, 0.14285714, 0.0952381},
+    {0.1, 0.71428571, 0.66666667},
+    {0.2, 0.85714286, 0.95238095},
+    {1.0, 0.0, 0.0},
+    {0.0, 0.71428571, 0.76190476},
+    {0.3, 0.85714286, 0.80952381},
+    {0.9, 0.14285714, 0.14285714},
+    {0.1, 0.71428571, 0.61904762},
+    {0.2, 0.85714286, 0.95238095},
+    {1.0, 0.0, 0.0952381},
+    {0.1, 0.71428571, 0.66666667},
+    {0.2, 0.85714286, 1.0},
+    {1.0, 0.0, 0.04761905}
+  };
+
+
+  
+/*
+  //class 1
+    float inputData[24][3] = {
+    {0.0, 1.0, 1.0},
+    {1.0, 0.0, 0.0},
+    {0.0, 1.0, 1.0},
+    {1.0, 0.0, 0.0},
+    {0.33, 1.0, 0.95},
+    {1.0, 0.0, 0.05},
+    {0.33, 1.0, 0.95},
+    {1.0, 0.0, 0.05},
+    {0.33, 1.0, 0.95},
+    {1.0, 0.0, 0.10},
+    {0.33, 1.0, 0.95},
+    {1.0, 0.0, 0.14},
+    {0.67, 1.0, 0.90},
+    {1.0, 0.2, 0.14},
+    {0.67, 1.0, 0.90},
+    {1.0, 0.2, 0.19},
+    {0.67, 1.0, 0.90},
+    {1.0, 0.2, 0.19},
+    {0.67, 1.0, 0.90},
+    {1.0, 0.2, 0.24},
+    {1.0, 1.0, 0.90},
+    {1.0, 0.2, 0.29},
+    {1.0, 0.8, 0.86},
+    {1.0, 0.2, 0.33}
+  };*/
 
   // TODO: QUANTIZE INPUT AND DEQUANTIZE OUTPUT? Do we need that?
   // something like that ???   int8_t x_quantized = x / input->params.scale + input->params.zero_point;   input->data.int8[0] = x_quantized;
@@ -171,10 +236,18 @@ void loop() {
   //int8_t y_quantized = output->data.int8[0];
   // Dequantize the output from integer to floating-point
   //float y = (y_quantized - output->params.zero_point) * output->params.scale;
+  int label_argax = -1;
+  float max_confidence = -1;
+  //Serial.print(output->dims->data[1]);
 
-  for (int i = 0; i < output->dims->data[1]; ++i) {
-    Serial.println(static_cast<float>(output->data.f[i]));
+  for (int i = output->dims->data[1] - 1; i >= 0; i--) {
+    if (output->data.f[i] > max_confidence) {
+      label_argmax = i;
+      max_confidence = output->data.f[i];
+    }
   }
+  //Serial.println(static_cast<float>(output->data.f[i]));
+  Serial.println(label_argmax + 1); // +1 so our labels are 1 2 and 3 like in the collab
 
 /*
 #if DEBUG
