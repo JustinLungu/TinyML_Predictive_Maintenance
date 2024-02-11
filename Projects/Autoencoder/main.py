@@ -2,6 +2,40 @@ import numpy as np
 import sys
 from data_preprocessing import Data, Preprocessing
 
+TRAIN_RATIO = 0.7
+VAL_RATIO = 0.2
+TEST_RATIO = 0.1
+WINDOW_SIZE = 24
+#x,y,z accelerometer data
+DATA_SHAPE = 3
+
+def normalization(normal_data: Data, abnormal_data: Data):
+    preprocess = Preprocessing()
+
+    #normal data normalization (train,val,test)
+    train = normal_data.train_data
+    val = normal_data.val_data
+    test = normal_data.test_data
+
+    train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+
+    train = preprocess.min_max_scale_fit(train)
+    val = preprocess.min_max_transform(val)
+    test = preprocess.min_max_transform(test)
+
+    normal_data.train_data = train.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+    normal_data.val_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+    normal_data.test_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+
+    #abnormal data (the entire dataset)
+    abnormal = abnormal_data.dataset
+    abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    abnormal = preprocess.min_max_scale_fit(abnormal)
+    abnormal_data.dataset = abnormal.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+
+
 if __name__ == "__main__":
     #set the threshhold of prinitng data to console to maximum value
     #so avoid the loss of data on console while displaying
@@ -16,6 +50,7 @@ if __name__ == "__main__":
     #normal_data.plotVibPattern(datapoints = 2000)
     #abnormal_data.plotVibPattern(datapoints = 2000)
 
-    normal_data.data_split_window(train_ratio = 0.7, val_ratio = 0.2, test_ratio = 0.1, window_size = 24)
-    abnormal_data.dataset = abnormal_data.make_windows(abnormal_data.dataset, window_size = 24)
-    print(normal_data.train_data.shape)
+    normal_data.data_split_window(TRAIN_RATIO, VAL_RATIO, TEST_RATIO, WINDOW_SIZE)
+    abnormal_data.dataset = abnormal_data.make_windows(abnormal_data.dataset, WINDOW_SIZE)
+    
+    normalization(normal_data, abnormal_data)
