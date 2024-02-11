@@ -2,6 +2,8 @@ import numpy as np
 import sys
 from data_preprocessing import Data, Preprocessing
 from save_load import Saving_Loading
+from model import AnomalyDetector
+import matplotlib.pyplot as plt
 
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
@@ -10,6 +12,10 @@ WINDOW_SIZE = 24
 DATA_SHAPE = 3 #x,y,z accelerometer data
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
 DO_PREPROCESSING = False
+OPTIMIZER = "adam"
+LOSS = "mse"
+EPOCHS = 20
+BATCH_SIZE = 512
 
 def normalization(normal_data: Data, abnormal_data: Data):
     preprocess = Preprocessing()
@@ -69,6 +75,12 @@ if __name__ == "__main__":
 
     print(normal_data.train_data.shape)
 
-
+    model = AnomalyDetector(OPTIMIZER, LOSS, normal_data.train_data, normal_data.val_data)
+    history = model.train(EPOCHS, BATCH_SIZE)
     
+    
+    plt.plot(history.history["loss"], label="Training Loss")
+    plt.plot(history.history["val_loss"], label="Validation Loss")
+    plt.legend()
+    plt.show()
     
