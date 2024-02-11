@@ -1,6 +1,8 @@
 from keras.models import Model
 from keras import layers, losses
 import tensorflow as tf
+import matplotlib.pyplot as plt
+import os
 
 class Autoencoder(Model):
   # This is the constructor method for the Autoencoder class, where the architecture of the autoencoder is defined.
@@ -48,5 +50,21 @@ class AnomalyDetector:
           shuffle=True)
         
         return self.history
+    
+    def plot_loss(self, folder_path):
+
+        plt.plot(self.history.history["loss"], label="Training Loss")
+        plt.plot(self.history.history["val_loss"], label="Validation Loss")
+        plt.legend()
+        plt.xlabel("Epoch")
+        plt.ylabel("Loss")
+        plt.title("Training and Validation Loss")
+        
+        # Create the Plots folder if it doesn't exist
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        plt.savefig(os.path.join(folder_path, "overfitting_plot.png"))
+        plt.show()
         
 

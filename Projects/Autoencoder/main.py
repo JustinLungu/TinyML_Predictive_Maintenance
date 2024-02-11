@@ -4,13 +4,16 @@ from data_preprocessing import Data, Preprocessing
 from save_load import Saving_Loading
 from model import AnomalyDetector
 import matplotlib.pyplot as plt
+import os
 
+DATAPOINTS_PLOTTING = 2000
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
 WINDOW_SIZE = 24
 DATA_SHAPE = 3 #x,y,z accelerometer data
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
+PLOTS_FOLDER_PATH = "Projects/Autoencoder/Plots"
 DO_PREPROCESSING = False
 OPTIMIZER = "adam"
 LOSS = "mse"
@@ -45,8 +48,8 @@ def normalization(normal_data: Data, abnormal_data: Data):
 
 def manipulate_data(normal_data, abnormal_data, save_load):
     # plot datasets
-    normal_data.plotVibPattern(datapoints = 2000)
-    abnormal_data.plotVibPattern(datapoints = 2000)
+    normal_data.plotVibPattern(datapoints = DATAPOINTS_PLOTTING)
+    abnormal_data.plotVibPattern(datapoints = DATAPOINTS_PLOTTING)
 
     normal_data.data_split_window(TRAIN_RATIO, VAL_RATIO, TEST_RATIO, WINDOW_SIZE)
     abnormal_data.dataset = abnormal_data.make_windows(abnormal_data.dataset, WINDOW_SIZE)
@@ -73,14 +76,11 @@ if __name__ == "__main__":
     else:
         save_load.load_data_json(normal_data, abnormal_data)
 
-    print(normal_data.train_data.shape)
-
+    #autoencoder training
     model = AnomalyDetector(OPTIMIZER, LOSS, normal_data.train_data, normal_data.val_data)
-    history = model.train(EPOCHS, BATCH_SIZE)
+    model.train(EPOCHS, BATCH_SIZE)
+    model.plot_loss(PLOTS_FOLDER_PATH)
+
+
     
-    
-    plt.plot(history.history["loss"], label="Training Loss")
-    plt.plot(history.history["val_loss"], label="Validation Loss")
-    plt.legend()
-    plt.show()
     
