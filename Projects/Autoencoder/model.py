@@ -33,8 +33,8 @@ class Autoencoder(Model):
   
 class AnomalyDetector:
     def __init__(self, optimizer, loss, train_data, val_data) -> None:
-        self.model = Autoencoder()
-        self.model.compile(optimizer = optimizer, loss = loss)
+        self.autoencoder = Autoencoder()
+        self.autoencoder.compile(optimizer = optimizer, loss = loss)
 
         # Flatten the input data before feeding it into the model
         self.train_data = train_data.reshape(-1, 24 * 3)
@@ -43,7 +43,7 @@ class AnomalyDetector:
         self.history = None
 
     def train(self, nr_epochs, nr_batches):
-        self.history = self.model.fit(self.train_data, self.train_data,
+        self.history = self.autoencoder.fit(self.train_data, self.train_data,
           epochs = nr_epochs,
           batch_size = nr_batches,
           validation_data=(self.val_data, self.val_data),
