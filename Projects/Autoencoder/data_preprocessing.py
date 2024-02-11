@@ -15,6 +15,10 @@ class Data:
         self.dataset = self._readData(self.filename)
         # Add a new column for sequential timestamps
         self.dataset['timestamp'] = np.arange(1, len(self.dataset) + 1)
+        
+        self.train_data = None
+        self.val_data = None
+        self.test_data = None
 
 
     #--------------To read the data from a file
