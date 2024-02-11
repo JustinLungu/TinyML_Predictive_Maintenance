@@ -4,6 +4,7 @@ from data_preprocessing import Data, Preprocessing
 from save_load_data import Saving_Loading
 from model import AnomalyDetector
 from save_model import Save_Model
+from evaluation import Evaluation
 
 
 DATAPOINTS_PLOTTING = 2000
@@ -20,6 +21,7 @@ OPTIMIZER = "adam"
 LOSS = "mse"
 EPOCHS = 20
 BATCH_SIZE = 512
+NR_SAMPLES_VISUALIZE = 5
 
 def normalization(normal_data: Data, abnormal_data: Data):
     preprocess = Preprocessing()
@@ -82,6 +84,22 @@ if __name__ == "__main__":
     model.train(EPOCHS, BATCH_SIZE)
     model.plot_loss(PLOTS_FOLDER_PATH)
 
+    #save model
     save_model = Save_Model()
     save_model.save(model.autoencoder, MODELS_FOLDER_PATH)
-    
+
+    #evaluation
+    normal_eval = Evaluation(normal_data.test_data, "Normal")
+    abnormal_eval = Evaluation(abnormal_data.dataset, "Anomalous")
+
+    normal_eval.predict(model.autoencoder)
+    abnormal_eval.predict(model.autoencoder)
+
+
+    mse_eval_normal = normal_eval.calc_mse()
+    mse_eval_abnormal = abnormal_eval.calc_mse()
+    print(f"Difference between the mse of Normal and Anomalous predictions: {abs(mse_eval_normal - mse_eval_abnormal)}")
+
+    normal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
+    abnormal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
+
