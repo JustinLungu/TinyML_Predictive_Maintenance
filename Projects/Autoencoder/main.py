@@ -9,6 +9,12 @@ import os
 import tensorflow as tf
 import joblib
 
+
+
+import subprocess
+
+
+
 DATAPOINTS_PLOTTING = 2000
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
@@ -104,7 +110,6 @@ if __name__ == "__main__":
 
 
     # Save models in different formats
-    
     create_folder_if_not_exists(MODELS_FOLDER_PATH)
 
     # Save as .tflite
@@ -115,11 +120,10 @@ if __name__ == "__main__":
     pkl_filepath = os.path.join(MODELS_FOLDER_PATH, "model.pkl")
     save_as_pkl(model.autoencoder, pkl_filepath)
 
-    # Save as .h5
-    h5_filepath = os.path.join(MODELS_FOLDER_PATH, "model.h5")
-    create_folder_if_not_exists(os.path.dirname(h5_filepath))
-    # Save the model
-    model.autoencoder.save(h5_filepath)
+    # Convert to C array
+    subprocess.run(['xxd', '-i', tflite_filepath, os.path.join(MODELS_FOLDER_PATH, 'autoencoder.cc')])
 
-    
-    
+    # Modify file names
+    model_cc_path = os.path.join(MODELS_FOLDER_PATH, 'autoencoder.cc')
+    replace_text = "model_tflite".replace('/', '_').replace('.', '_')
+    subprocess.run(['sed', '-i', f's/{replace_text}/g_model/g', model_cc_path])
