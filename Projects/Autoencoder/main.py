@@ -16,12 +16,12 @@ DATA_SHAPE = 3 #x,y,z accelerometer data
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
 PLOTS_FOLDER_PATH = "Projects/Autoencoder/Plots"
 MODELS_FOLDER_PATH = "Models/Autoencoder"
-DO_PREPROCESSING = True
+DO_PREPROCESSING = False
 OPTIMIZER = "adam"
 LOSS = "mse"
 EPOCHS = 20
 BATCH_SIZE = 512
-NR_SAMPLES_VISUALIZE = 5
+NR_SAMPLES_VISUALIZE = 8
 
 def normalization(normal_data: Data, abnormal_data: Data):
     preprocess = Preprocessing()
