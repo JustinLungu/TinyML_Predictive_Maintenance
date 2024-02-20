@@ -34,31 +34,29 @@ class Evaluation():
         return mse
 
     def visualize(self, num_samples, folder_path):
-
-        if self.decoded_windows is None:  # Check if decoded_windows is None
+        if self.decoded_windows is None:
             raise DecodedWindowsError("Decoded windows not available. Call predict() first.")
 
+        num_figures = -(-num_samples // 4)  # Ceiling division to determine the number of figures needed
 
-        # Select a few samples for visualization
-        samples_to_visualize = self.data[:num_samples]
-        decoded_to_visualize = self.decoded_windows[:num_samples]
+        for fig_num in range(num_figures):
+            plt.figure(figsize=(12, 8))
 
-        # Plot the original and decoded samples
-        for i in range(num_samples):
-            plt.figure(figsize=(8, 4))
-            plt.subplot(2, 1, 1)
-            plt.plot(samples_to_visualize[i].flatten(), label='Original')
-            plt.title(f'{self.type} - Sample {i + 1} - Original')
+            for i in range(4):
+                sample_index = fig_num * 4 + i
+                if sample_index >= num_samples:
+                    break
 
-            plt.subplot(2, 1, 2)
-            plt.plot(decoded_to_visualize[i].flatten(), label='Decoded', linestyle='--')
-            plt.title(f'{self.type} - Sample {i + 1} - Decoded')
+                plt.subplot(2, 2, i + 1)
+                plt.plot(self.data[sample_index].flatten(), label='Original')
+                plt.plot(self.decoded_windows[sample_index].flatten(), label='Decoded', linestyle='--')
+                plt.title(f'{self.type} - Sample {sample_index + 1}')
+                plt.legend()
 
             plt.tight_layout()
 
-            # Create the folder if it doesn't exist
             if not os.path.exists(folder_path):
                 os.makedirs(folder_path)
 
-            plt.savefig(os.path.join(folder_path, f"{self.type}_prediction.png"))
+            plt.savefig(os.path.join(folder_path, f"{self.type}_prediction_{fig_num}.png"))
             plt.show()
