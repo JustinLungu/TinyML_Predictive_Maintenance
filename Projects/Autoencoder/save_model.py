@@ -10,16 +10,16 @@ class Save_Model():
         self._create_folder_if_not_exists(folder_path)
 
         # Save as .tflite
-        tflite_filepath = os.path.join(folder_path, "model.tflite")
+        tflite_filepath = os.path.join(folder_path, "autoencoder_model.tflite")
         tflite_model = self._save_as_tflite(model, tflite_filepath)
 
         # Write TFLite model to a C source (or header) file
-        c_model_name = os.path.join(folder_path, "model")
+        c_model_name = os.path.join(folder_path, "autoencoder_model")
         with open(c_model_name + '.h', 'w') as file:
             file.write(self._hex_to_c_array(tflite_model, c_model_name))
 
         # Save as .pkl
-        pkl_filepath = os.path.join(folder_path, "model.pkl")
+        pkl_filepath = os.path.join(folder_path, "autoencoder_model.pkl")
         self._save_as_pkl(model, pkl_filepath)
 
         # Convert to C array
@@ -46,17 +46,6 @@ class Save_Model():
     def _create_folder_if_not_exists(self, folder_path):
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-
-    # Function to convert .tflite to C array and save as .h
-    def _save_as_c_array(self, tflite_filepath, folder_path):
-        c_model_name = "model"
-        hex_data = bytearray(open(tflite_filepath, 'rb').read())
-        c_array_content = self._hex_to_c_array(hex_data, c_model_name)
-        c_file_content = f"""{c_array_content}"""
-
-        c_file_path = os.path.join(folder_path, f"{c_model_name}.h")
-        with open(c_file_path, "w") as f:
-            f.write(c_file_content)
 
     # Function to convert hex data to C array format
     def _hex_to_c_array(self, hex_data, var_name):
