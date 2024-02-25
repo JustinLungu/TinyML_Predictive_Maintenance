@@ -81,6 +81,8 @@ void loop() {
       }
   }
 
+  Serial.println("Reading Window Done");
+  
   int j = 0;
   // Copy data to the input tensor
   for (int i = 0; i < 24; ++i) {

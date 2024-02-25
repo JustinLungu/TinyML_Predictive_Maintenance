@@ -23,9 +23,7 @@ namespace{
   constexpr int kTensorArenaSize = 20000;
   alignas(16) uint8_t tensor_arena[kTensorArenaSize]; //uint8_t tensor_arena[kTensorArenaSize];;// idk what the differrence here is and what the stuff does so just try both
 
-  float mse = 0.0;
-  float diff = 0.0;
-  float sumSquaredDiff = 0.0;
+  
 
 }
 
@@ -70,14 +68,23 @@ void setup() {
 void loop() {
 
   float buffer[72] = {0};
+  float mse = 0.0;
+  float diff = 0.0;
+  float sumSquaredDiff = 0.0;
+  
+
   
   // Read 24 readings from accelerometer
   for(int i = 0; i < 72; i += 3){
       if (IMU.accelerationAvailable()) {
-        IMU.readAcceleration(buffer[i], buffer[i + 1], buffer[i + 2]);
+        IMU.readAcceleration(buffer[i], buffer[i+1], buffer[i+2]);
+      } else {
+        i--;
       }
   }
 
+  Serial.println("Reading Window Done");
+  
   int j = 0;
   // Copy data to the input tensor
   for (int i = 0; i < 24; ++i) {
@@ -114,7 +121,9 @@ void loop() {
   mse = sumSquaredDiff / 72;
 
   Serial.println(mse);
+  Serial.println("Miliseconds:");
   Serial.println(millis());
+  
 
   delay(1000);
 
