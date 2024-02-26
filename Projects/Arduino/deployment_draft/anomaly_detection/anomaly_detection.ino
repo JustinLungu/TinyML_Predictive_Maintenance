@@ -23,9 +23,36 @@ namespace{
   constexpr int kTensorArenaSize = 20000;
   alignas(16) uint8_t tensor_arena[kTensorArenaSize]; //uint8_t tensor_arena[kTensorArenaSize];;// idk what the differrence here is and what the stuff does so just try both
 
-  
-
+  // Min-Max scaling parameters
+    float min_vals[3]; // Assuming 3 axes for accelerometer data
+    float max_vals[3];
 }
+
+
+void min_max_scale_fit(const float* data, int size) {
+    for (int i = 0; i < size; i += 3) {
+      min_vals[0] = min(min_vals[0], data[i]);
+      max_vals[0] = max(max_vals[0], data[i]);
+
+      min_vals[1] = min(min_vals[1], data[i+1]);
+      max_vals[1] = max(max_vals[1], data[i+1]);
+
+      min_vals[2] = min(min_vals[2], data[i+2]);
+      max_vals[2] = max(max_vals[2], data[i+2]);
+    }
+}
+
+void min_max_transform(float* data, int size) {
+    for (int i = 0; i < size; i += 3) {
+      data[i] = (data[i] - min_vals[0]) / (max_vals[0] - min_vals[0]);
+
+      data[i+1] = (data[i+1] - min_vals[1]) / (max_vals[1] - min_vals[1]);
+
+      data[i+2] = (data[i+2] - min_vals[2]) / (max_vals[2] - min_vals[2]);
+    }
+}
+
+
 
 void setup() {
   Serial.begin(9600);
@@ -73,7 +100,7 @@ void loop() {
   float sumSquaredDiff = 0.0;
   int readingsTaken = 0;
 
-  
+  Serial.println("Reading: ");
   // Read 24 readings from accelerometer
   for(int i = 0; i < 72; i += 3){
       if (IMU.accelerationAvailable()) {
@@ -94,6 +121,23 @@ void loop() {
   Serial.println(readingsTaken);
 
   Serial.println("Reading Window Done");
+
+
+  // Normalize data using Min-Max scaling
+  min_max_scale_fit(buffer, 72);
+  min_max_transform(buffer, 72);
+
+  Serial.println("Printing normalized data:");
+  //print normalized data
+  for(int i = 0; i < 72; i += 3){
+      Serial.print(buffer[i]);
+      Serial.print("   ");
+      Serial.print(buffer[i+1]);
+      Serial.print("   ");
+      Serial.println(buffer[i+2]);
+  }
+  
+
   
   int j = 0;
   // Copy data to the input tensor
