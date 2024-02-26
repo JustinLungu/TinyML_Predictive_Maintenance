@@ -71,17 +71,27 @@ void loop() {
   float mse = 0.0;
   float diff = 0.0;
   float sumSquaredDiff = 0.0;
-  
+  int readingsTaken = 0;
 
   
   // Read 24 readings from accelerometer
   for(int i = 0; i < 72; i += 3){
       if (IMU.accelerationAvailable()) {
         IMU.readAcceleration(buffer[i], buffer[i+1], buffer[i+2]);
+        Serial.print(buffer[i]);
+        Serial.print("   ");
+        Serial.print(buffer[i+1]);
+        Serial.print("   ");
+        Serial.println(buffer[i+2]);
+        readingsTaken++; // Increment the number of readings taken
       } else {
-        i--;
+        i -= 3;
       }
   }
+
+  // Print the number of readings taken
+  Serial.print("Readings taken: ");
+  Serial.println(readingsTaken);
 
   Serial.println("Reading Window Done");
   
@@ -93,6 +103,8 @@ void loop() {
       input->data.f[i + 48] = buffer[j+2]; // Copy the third element of each row
       j += 3;
   }
+
+  Serial.println("Input for model done");
   
   // Run inference, and report any error. Call the invoke function and check for errors
   TfLiteStatus invoke_status = interpreter->Invoke();
@@ -100,9 +112,11 @@ void loop() {
     MicroPrintf("Invoke failed");
     return;
   }
+  Serial.println("Invoke Successful");
 
   float output_buffer[72] = {0};
 
+  j = 0;
   // Copy data to the input tensor
   for (int i = 0; i < 24; ++i) {
       output_buffer[j] = output->data.f[i]; // Copy the first element of each row
@@ -111,6 +125,16 @@ void loop() {
       j += 3;
   }
 
+  Serial.println("Output for model done");
+
+  // Read 24 readings from model output
+  for(int i = 0; i < 24; ++i){
+        Serial.print(output_buffer[i]);
+        Serial.print("   ");
+        Serial.print(output_buffer[i+1]);
+        Serial.print("   ");
+        Serial.println(output_buffer[i+2]);
+  }
 
   // calculate the mean squared error
   sumSquaredDiff = 0.0;
@@ -120,8 +144,9 @@ void loop() {
   }
   mse = sumSquaredDiff / 72;
 
+  Serial.print("Mean Squared Error: ");
   Serial.println(mse);
-  Serial.println("Miliseconds:");
+  Serial.print("Miliseconds: ");
   Serial.println(millis());
   
 

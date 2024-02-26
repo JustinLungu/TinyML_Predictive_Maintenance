@@ -36,13 +36,30 @@ void setup() {
 
 void loop() {
   
-  float buffer[24][3] = {0};
+  float buffer[72] = {0};
   float mse = 0.0;
   float diff = 0.0;
   float sumSquaredDiff = 0.0;
 
   int readingsTaken = 0; // Variable to keep track of the number of readings taken
+
+
+  // Read 24 readings from accelerometer
+  for(int i = 0; i < 72; i += 3){
+      if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(buffer[i], buffer[i+1], buffer[i+2]);
+        Serial.print(buffer[i]);
+        Serial.print("   ");
+        Serial.print(buffer[i+1]);
+        Serial.print("   ");
+        Serial.println(buffer[i+2]);
+        readingsTaken++; // Increment the number of readings taken
+      } else {
+        i -= 3;
+      }
+  }
   
+  /*
   // Read 24 readings from accelerometer
   for(int i = 0; i < 24; ++i){
       if (IMU.accelerationAvailable()) {
@@ -61,11 +78,12 @@ void loop() {
         //Serial.println("Acceleration not available!");
       }
   }
+  */
   
   // Print the number of readings taken
   Serial.print("Readings taken: ");
   Serial.println(readingsTaken);
   
   Serial.println("Reading Window Done");
-
+  delay(1000);
 }
