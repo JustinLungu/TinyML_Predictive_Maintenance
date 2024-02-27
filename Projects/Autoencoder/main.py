@@ -31,13 +31,22 @@ def normalization(normal_data: Data, abnormal_data: Data):
     val = normal_data.val_data
     test = normal_data.test_data
 
-    train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    #train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    #val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    #test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+
+    train = train.reshape(-1, DATA_SHAPE)
+    val = val.reshape(-1, DATA_SHAPE)
+    test = test.reshape(-1, DATA_SHAPE)
 
     train = preprocess.min_max_scale_fit(train)
     val = preprocess.min_max_transform(val)
     test = preprocess.min_max_transform(test)
+
+    # Round to two decimal places
+    train = np.round(train, 2) 
+    val = np.round(val, 2) 
+    test = np.round(test, 2) 
 
     normal_data.train_data = train.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
     normal_data.val_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
@@ -45,8 +54,11 @@ def normalization(normal_data: Data, abnormal_data: Data):
 
     #abnormal data (the entire dataset)
     abnormal = abnormal_data.dataset
-    abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    #abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    abnormal = abnormal.reshape(-1, DATA_SHAPE)
     abnormal = preprocess.min_max_scale_fit(abnormal)
+    # Round to two decimal places
+    abnormal = np.round(abnormal, 2)  
     abnormal_data.dataset = abnormal.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
 
 def manipulate_data(normal_data, abnormal_data, save_load):
