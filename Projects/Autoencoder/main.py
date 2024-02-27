@@ -103,3 +103,6 @@ if __name__ == "__main__":
     normal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
     abnormal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
 
+
+    
+

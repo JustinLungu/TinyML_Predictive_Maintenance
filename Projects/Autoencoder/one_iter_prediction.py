@@ -36,7 +36,7 @@ if __name__ == "__main__":
     random_seed = 42
     np.random.seed(random_seed)
 
-    #shape(1, 24, 3)
+    #shape(1, 24, 3): Raw data directly from the Arduino
     window_raw = np.array([[
             [0.03, -0.04, 1.00],
             [0.03, -0.04, 1.00],
@@ -63,13 +63,13 @@ if __name__ == "__main__":
             [0.03, -0.05, 1.00],
             [0.03, -0.04, 1.00]
             ]])
+    #make it window size compatible with the model
     window_raw_norm = normalization(window_raw)
     print("Data taken directly from Arduino: \n", window_raw)
     print("Data taken directly from Arduino NORMALIZED: \n", window_raw_norm)
     
 
     normal_data = Data(capture = "1", hertz = "60", volume = "30")
-
     #make it window size compatible with the model
     window_normal_data = normal_data.make_windows(normal_data.dataset[:WINDOW_SIZE], WINDOW_SIZE)
     print("First 24 readings from the normal dataset in window size 24 format: \n", window_normal_data)
@@ -78,8 +78,7 @@ if __name__ == "__main__":
 
 
 
-    ##################################### LOAD THE MODEL ###########################################
-    #save model
+    #Load model
     loader = Load_Model()
     model = loader.load_pkl(MODELS_FOLDER_PATH)
 
@@ -101,3 +100,7 @@ if __name__ == "__main__":
 
 
 
+    print("Output of the Encoder \n", raw_eval.encoded_windows)
+
+    print_decoded = raw_eval.decoded_windows
+    print("Output of the Decoder: \n", print_decoded.reshape(24, 3))
