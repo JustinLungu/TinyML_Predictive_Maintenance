@@ -2,6 +2,7 @@ import os
 import tensorflow as tf
 import joblib
 import subprocess
+import numpy as np
 
 class Save_Model(): 
 
@@ -80,3 +81,29 @@ class Save_Model():
         c_str += '#endif //' + var_name.upper() + '_H'
 
         return c_str
+
+
+class Load_Model():
+    def load_tflite(self, filepath):
+        interpreter = tf.lite.Interpreter(model_path=filepath)
+        interpreter.allocate_tensors()
+        return interpreter
+
+    def load_pkl(self, filepath):
+        return joblib.load(filepath)
+
+    def load_c_array(self, array, array_len):
+        # Convert C array to numpy array
+        byte_array = np.frombuffer(array, dtype=np.uint8)
+        return byte_array[:array_len]
+
+    def load_from_folder(self, folder_path):
+        # Load TFLite model
+        tflite_filepath = os.path.join(folder_path, "autoencoder_model.tflite")
+        tflite_model = self.load_tflite(tflite_filepath)
+
+        # Load Pickle model
+        pkl_filepath = os.path.join(folder_path, "autoencoder_model.pkl")
+        pkl_model = self.load_pkl(pkl_filepath)
+
+        return tflite_model, pkl_model
