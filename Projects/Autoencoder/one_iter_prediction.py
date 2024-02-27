@@ -18,7 +18,7 @@ def normalization(window_data):
         # Flatten window to 2D array
         window_flat = window.reshape(-1, DATA_SHAPE)  
         normalized_window_flat = preprocess.min_max_scale_fit(window_flat)
-        # Round to two decimal places
+            
         normalized_window_flat_rounded = np.round(normalized_window_flat, 2)  
         normalized_window = normalized_window_flat_rounded.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
         normalized_windows.append(normalized_window)
@@ -38,31 +38,31 @@ if __name__ == "__main__":
 
     #shape(1, 24, 3): Raw data directly from the Arduino
     window_raw = np.array([[
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.03, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.02, -0.04, 1.00],
-            [0.03, -0.05, 1.00],
-            [0.03, -0.04, 1.00]
-            ]])
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.03, -0.04, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.04, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.03, -0.05, 1.00],
+        [0.04, -0.05, 1.00]
+        ]])
     #make it window size compatible with the model
     window_raw_norm = normalization(window_raw)
     print("Data taken directly from Arduino: \n", window_raw)
