@@ -94,12 +94,14 @@ class Data:
 
 class Preprocessing:
     def __init__(self) -> None:
-        pass
+        self.epsilon = 1e-8  # Small value to avoid division by zero
 
     def min_max_scale_fit(self, data):
         self.min_vals = np.min(data, axis=0)
         self.max_vals = np.max(data, axis=0)
-        scaled_data = (data - self.min_vals) / (self.max_vals - self.min_vals)
+        #print("Minimum values: \n", self.min_vals)
+        #print("Maximum values: \n", self.max_vals)
+        scaled_data = (data - self.min_vals) / (self.max_vals - self.min_vals + self.epsilon)
         return scaled_data
 
     def min_max_transform(self, data):

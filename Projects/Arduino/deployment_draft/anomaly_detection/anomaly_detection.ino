@@ -30,6 +30,12 @@ namespace{
 
 
 void min_max_scale_fit(const float* data, int size) {
+
+    for(int i = 0; i < 3; ++i){
+      min_vals[i] = {99};
+      max_vals[i] = {0};
+    }
+
     for (int i = 0; i < size; i += 3) {
       min_vals[0] = min(min_vals[0], data[i]);
       max_vals[0] = max(max_vals[0], data[i]);
