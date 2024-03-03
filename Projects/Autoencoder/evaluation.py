@@ -7,16 +7,18 @@ class DecodedWindowsError(Exception):
 
 class Evaluation():
 
-    def __init__(self, data, data_type) -> None:
+    def __init__(self, data, data_type, window_size) -> None:
         self.data = data
         self.type = data_type
         self.decoded_windows = None
         self.encoded_windows = None
+        self.window_size = window_size
 
     def predict(self, model):
         test_reshaped = self.data.reshape(self.data.shape[0], -1)
         self.encoded_windows = model.encoder(test_reshaped).numpy()
         self.decoded_windows = model.decoder(self.encoded_windows).numpy()
+        self.decoded_windows = self.decoded_windows.reshape(-1, self.window_size, 3)
 
     def calc_mse(self):
 
@@ -24,13 +26,15 @@ class Evaluation():
             raise DecodedWindowsError("Decoded windows not available. Call predict() first.")
 
         # Flatten the data for MSE calculation
-        sample_flattened = self.data.reshape(-1, 24 * 3)
-        decoded_flattened = self.decoded_windows.reshape(-1, 24 * 3)
+        sample_flattened = self.data.reshape(-1, self.window_size * 3)
+        print(f"Shape for mse for decoded windows: {self.decoded_windows.shape}")
+        decoded_flattened = self.decoded_windows.reshape(-1, self.window_size * 3)
 
         # Calculate mean squared error
         mse = np.mean((sample_flattened - decoded_flattened)**2)
 
         print(f'Mean Squared Error for {self.type} data: {mse}')
+
         return mse
 
     def visualize_window(self, num_samples, folder_path):
@@ -50,7 +54,9 @@ class Evaluation():
                 plt.subplot(2, 2, i + 1)
 
                 # Raw data x,y,z 24x3 matrix
+                #print(self.data.shape)
                 window_raw = self.data[i]
+                #print(window_raw.shape)
                 raw_x_axis = window_raw[:, 0]  # Extracting x-axis data
                 raw_y_axis = window_raw[:, 1]  # Extracting y-axis data
                 raw_z_axis = window_raw[:, 2]  # Extracting z-axis data
@@ -65,9 +71,10 @@ class Evaluation():
                 plt.plot(raw_z_axis, label='Original Z-axis')
 
                 # Decoded data x,y,z 24x3 matrix
-                decoded_x_axis = self.decoded_windows[:, 0]  # Extracting x-axis data
-                decoded_y_axis = self.decoded_windows[:, 1]  # Extracting y-axis data
-                decoded_z_axis = self.decoded_windows[:, 2]  # Extracting z-axis data
+                window_dec = self.decoded_windows[i]
+                decoded_x_axis = window_dec[:, 0]  # Extracting x-axis data
+                decoded_y_axis = window_dec[:, 1]  # Extracting y-axis data
+                decoded_z_axis = window_dec[:, 2]  # Extracting z-axis data
 
                 # Plotting x-axis
                 plt.plot(decoded_x_axis, label='Decoded X-axis', linestyle='--')

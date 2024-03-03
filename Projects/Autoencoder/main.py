@@ -8,22 +8,24 @@ from evaluation import Evaluation
 
 import matplotlib.pyplot as plt
 
+#if you modify any constant make sure to set this to true
+#otherwise you can keep it at false
+DO_PREPROCESSING = True
 
+WINDOW_SIZE = 24
 DATAPOINTS_PLOTTING = 2000
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
-WINDOW_SIZE = 96
 DATA_SHAPE = 3 #x,y,z accelerometer data
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
 PLOTS_FOLDER_PATH = "Projects/Autoencoder/Plots"
 MODELS_FOLDER_PATH = "Models/Autoencoder"
-DO_PREPROCESSING = False
 OPTIMIZER = "adam"
 LOSS = "mse"
 EPOCHS = 20
 BATCH_SIZE = 512
-NR_SAMPLES_VISUALIZE = 8
+NR_SAMPLES_VISUALIZE = 4
 
 
 def plot_data(data, type):
@@ -125,8 +127,8 @@ if __name__ == "__main__":
     save_model.save(model.autoencoder, MODELS_FOLDER_PATH)
 
     #evaluation
-    normal_eval = Evaluation(normal_data.test_data, "Normal")
-    abnormal_eval = Evaluation(abnormal_data.dataset, "Anomalous")
+    normal_eval = Evaluation(normal_data.test_data, "Normal", WINDOW_SIZE)
+    abnormal_eval = Evaluation(abnormal_data.dataset, "Anomalous", WINDOW_SIZE)
 
     normal_eval.predict(model.autoencoder)
     abnormal_eval.predict(model.autoencoder)
