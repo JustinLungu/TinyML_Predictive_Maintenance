@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import random
 
 class DecodedWindowsError(Exception):
     pass
@@ -20,17 +21,23 @@ class Evaluation():
         self.decoded_windows = model.decoder(self.encoded_windows).numpy()
         self.decoded_windows = self.decoded_windows.reshape(-1, self.window_size, 3)
 
-    def calc_mse(self):
+    def calc_mse(self, sample_size = 0, type = None):
 
         if self.decoded_windows is None:  # Check if decoded_windows is None
             raise DecodedWindowsError("Decoded windows not available. Call predict() first.")
+        
+        
+        
+        if type == "Anomaly":
+            # Flatten the data for MSE calculation
+            #random_number = random.randint(0, self.decoded_windows.shape[0] - (sample_size-1))
+            sample_flattened = self.data[:sample_size].reshape(-1, self.window_size * 3)
+            decoded_flattened = self.decoded_windows[:sample_size].reshape(-1, self.window_size * 3)
+        else:
+            sample_flattened = self.data.reshape(-1, self.window_size * 3)
+            decoded_flattened = self.decoded_windows.reshape(-1, self.window_size * 3)
+        print(f"Shape for mse for decoded windows: {len(decoded_flattened)}")
 
-        # Flatten the data for MSE calculation
-        sample_flattened = self.data.reshape(-1, self.window_size * 3)
-        print(f"Shape for mse for decoded windows: {self.decoded_windows.shape}")
-        decoded_flattened = self.decoded_windows.reshape(-1, self.window_size * 3)
-
-        # Calculate mean squared error
         mse = np.mean((sample_flattened - decoded_flattened)**2)
 
         print(f'Mean Squared Error for {self.type} data: {mse}')
