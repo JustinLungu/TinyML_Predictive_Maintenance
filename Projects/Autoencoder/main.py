@@ -23,9 +23,9 @@ DATAPOINTS_PLOTTING = 2000
 #hyperparameter tuning
 OPTIMIZER = "adam"
 LOSS = "mse"
-EPOCHS = 5
+EPOCHS = 20
 #NOTES: 256 minimal
-BATCH_SIZE = 128
+BATCH_SIZE = 1024
 NR_SAMPLES_VISUALIZE = 4
 
 #Paths to save/load
@@ -144,6 +144,12 @@ if __name__ == "__main__":
     print(normal_eval.data.shape[0])
     mse_eval_abnormal = abnormal_eval.calc_mse(sample_size = normal_eval.data.shape[0], type = "Anomaly")
     print(f"Difference between the mse of Normal and Anomalous predictions: {abs(mse_eval_normal - mse_eval_abnormal)}")
+
+
+    mae_eval_normal = normal_eval.calc_mae(type = "Normal")
+    print(normal_eval.data.shape[0])
+    mae_eval_abnormal = abnormal_eval.calc_mae(sample_size = normal_eval.data.shape[0], type = "Anomaly")
+    print(f"Difference between the mae of Normal and Anomalous predictions: {abs(mae_eval_normal - mae_eval_abnormal)}")
 
     normal_eval.visualize_window(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
     abnormal_eval.visualize_window(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)

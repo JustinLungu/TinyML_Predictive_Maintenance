@@ -43,6 +43,27 @@ class Evaluation():
         print(f'Mean Squared Error for {self.type} data: {mse}')
 
         return mse
+    
+    def calc_mae(self, sample_size = 0, type = None):
+
+        if self.decoded_windows is None:  # Check if decoded_windows is None
+            raise DecodedWindowsError("Decoded windows not available. Call predict() first.")
+        
+        if type == "Anomaly":
+            # Flatten the data for MAE calculation
+            #random_number = random.randint(0, self.decoded_windows.shape[0] - (sample_size-1))
+            sample_flattened = self.data[:sample_size].reshape(-1, self.window_size * 3)
+            decoded_flattened = self.decoded_windows[:sample_size].reshape(-1, self.window_size * 3)
+        else:
+            sample_flattened = self.data.reshape(-1, self.window_size * 3)
+            decoded_flattened = self.decoded_windows.reshape(-1, self.window_size * 3)
+        print(f"Shape for mae for decoded windows: {len(decoded_flattened)}")
+
+        mae = np.mean(np.abs(sample_flattened - decoded_flattened))
+
+        print(f'Mean Absolute Error for {self.type} data: {mae}')
+        
+        return mae
 
     def visualize_window(self, num_samples, folder_path):
         if self.decoded_windows is None:
