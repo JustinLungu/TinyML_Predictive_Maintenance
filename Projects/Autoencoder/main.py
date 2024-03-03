@@ -10,22 +10,27 @@ import matplotlib.pyplot as plt
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = True
+DO_PREPROCESSING = False
 
-WINDOW_SIZE = 24
-DATAPOINTS_PLOTTING = 2000
+#data preprocessing
+WINDOW_SIZE = 48
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
 DATA_SHAPE = 3 #x,y,z accelerometer data
+DATAPOINTS_PLOTTING = 2000
+
+#hyperparameter tuning
+OPTIMIZER = "adam"
+LOSS = "mse"
+EPOCHS = 12
+BATCH_SIZE = 256
+NR_SAMPLES_VISUALIZE = 4
+
+#Paths to save/load
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
 PLOTS_FOLDER_PATH = "Projects/Autoencoder/Plots"
 MODELS_FOLDER_PATH = "Models/Autoencoder"
-OPTIMIZER = "adam"
-LOSS = "mse"
-EPOCHS = 20
-BATCH_SIZE = 512
-NR_SAMPLES_VISUALIZE = 4
 
 
 def plot_data(data, type):
