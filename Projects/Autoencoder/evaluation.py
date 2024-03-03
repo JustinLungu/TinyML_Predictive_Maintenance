@@ -33,7 +33,7 @@ class Evaluation():
         print(f'Mean Squared Error for {self.type} data: {mse}')
         return mse
 
-    def visualize(self, num_samples, folder_path):
+    def visualize_window(self, num_samples, folder_path):
         if self.decoded_windows is None:
             raise DecodedWindowsError("Decoded windows not available. Call predict() first.")
 
@@ -48,8 +48,37 @@ class Evaluation():
                     break
 
                 plt.subplot(2, 2, i + 1)
-                plt.plot(self.data[sample_index].flatten(), label='Original')
-                plt.plot(self.decoded_windows[sample_index].flatten(), label='Decoded', linestyle='--')
+
+                # Raw data x,y,z 24x3 matrix
+                window_raw = self.data[i]
+                raw_x_axis = window_raw[:, 0]  # Extracting x-axis data
+                raw_y_axis = window_raw[:, 1]  # Extracting y-axis data
+                raw_z_axis = window_raw[:, 2]  # Extracting z-axis data
+
+                # Plotting x-axis
+                plt.plot(raw_x_axis, label='Original X-axis')
+
+                # Plotting y-axis
+                plt.plot(raw_y_axis, label='Original Y-axis')
+
+                # Plotting z-axis
+                plt.plot(raw_z_axis, label='Original Z-axis')
+
+                # Decoded data x,y,z 24x3 matrix
+                decoded_x_axis = self.decoded_windows[:, 0]  # Extracting x-axis data
+                decoded_y_axis = self.decoded_windows[:, 1]  # Extracting y-axis data
+                decoded_z_axis = self.decoded_windows[:, 2]  # Extracting z-axis data
+
+                # Plotting x-axis
+                plt.plot(decoded_x_axis, label='Decoded X-axis', linestyle='--')
+
+                # Plotting y-axis
+                plt.plot(decoded_y_axis, label='Decoded Y-axis', linestyle='--')
+
+                # Plotting z-axis
+                plt.plot(decoded_z_axis, label='Decoded Z-axis', linestyle='--')
+                #plt.plot(self.data[sample_index].flatten(), label='Original')
+                #plt.plot(self.decoded_windows[sample_index].flatten(), label='Decoded', linestyle='--')
                 plt.title(f'{self.type} - Sample {sample_index + 1}')
                 plt.legend()
 

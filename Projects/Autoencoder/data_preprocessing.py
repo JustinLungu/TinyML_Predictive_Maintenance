@@ -93,8 +93,18 @@ class Data:
 
 
 class Preprocessing:
-    def __init__(self) -> None:
+    def __init__(self, window_size) -> None:
         self.epsilon = 1e-8  # Small value to avoid division by zero
+        self.window_size = window_size
+
+    def normalize_by_2(self, data):
+        for i in range(0, len(data)):
+            for j in range(0,self.window_size * 3):
+                data[i][j] = (data[i][j] + 2) / 4
+
+        return data
+        
+        
 
     def min_max_scale_fit(self, data):
         self.min_vals = np.min(data, axis=0)

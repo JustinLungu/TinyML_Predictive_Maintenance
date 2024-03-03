@@ -6,12 +6,14 @@ from model import AnomalyDetector
 from save_model import Save_Model
 from evaluation import Evaluation
 
+import matplotlib.pyplot as plt
+
 
 DATAPOINTS_PLOTTING = 2000
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
-WINDOW_SIZE = 24
+WINDOW_SIZE = 96
 DATA_SHAPE = 3 #x,y,z accelerometer data
 DATA_FOLDER_PATH = "Projects/Autoencoder/Preprocessed Data"
 PLOTS_FOLDER_PATH = "Projects/Autoencoder/Plots"
@@ -23,49 +25,69 @@ EPOCHS = 20
 BATCH_SIZE = 512
 NR_SAMPLES_VISUALIZE = 8
 
+
+def plot_data(data, type):
+    # Assuming abnormal_plot is a window_size x 3 matrix
+    x_axis = data[:, 0]  # Extracting x-axis data
+    y_axis = data[:, 1]  # Extracting y-axis data
+    z_axis = data[:, 2]  # Extracting z-axis data
+
+    # Plotting x-axis
+    plt.plot(x_axis, label='X-axis')
+
+    # Plotting y-axis
+    plt.plot(y_axis, label='Y-axis')
+
+    # Plotting z-axis
+    plt.plot(z_axis, label='Z-axis')
+
+    plt.xlabel('Time')
+    plt.ylabel('Acceleration')
+    plt.title(f'Window {type} normalization')
+    plt.legend()
+    plt.show()
+
 def normalization(normal_data: Data, abnormal_data: Data):
-    preprocess = Preprocessing()
+    preprocess = Preprocessing(WINDOW_SIZE)
 
     #normal data normalization (train,val,test)
     train = normal_data.train_data
     val = normal_data.val_data
     test = normal_data.test_data
+    plot_data(test[1], "Test before")
 
-    #train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    #val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    #test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
 
-    train = train.reshape(-1, DATA_SHAPE)
-    val = val.reshape(-1, DATA_SHAPE)
-    test = test.reshape(-1, DATA_SHAPE)
-
-    train = preprocess.min_max_scale_fit(train)
-    val = preprocess.min_max_transform(val)
-    test = preprocess.min_max_transform(test)
-
-    # Round to two decimal places
-    train = np.round(train, 2) 
-    val = np.round(val, 2) 
-    test = np.round(test, 2) 
+    train = preprocess.normalize_by_2(train)
+    val = preprocess.normalize_by_2(val)
+    test = preprocess.normalize_by_2(test)
 
     normal_data.train_data = train.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
     normal_data.val_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
-    normal_data.test_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+    normal_data.test_data = test.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+
+    plot_data(normal_data.test_data[1], "Test after")
 
     #abnormal data (the entire dataset)
     abnormal = abnormal_data.dataset
-    #abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    abnormal = abnormal.reshape(-1, DATA_SHAPE)
-    abnormal = preprocess.min_max_scale_fit(abnormal)
-    # Round to two decimal places
-    abnormal = np.round(abnormal, 2)  
+    abnormal_plot = abnormal_data.dataset[1]
+
+    plot_data(abnormal_plot, "Anomalous before")
+
+    abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
+    abnormal = preprocess.normalize_by_2(abnormal)
     abnormal_data.dataset = abnormal.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
+
+    abnormal_plot = abnormal_data.dataset[1]
+    plot_data(abnormal_plot, "Anomalous after")
+
 
 def manipulate_data(normal_data, abnormal_data, save_load):
     # plot datasets
     normal_data.plotVibPattern(datapoints = DATAPOINTS_PLOTTING)
     abnormal_data.plotVibPattern(datapoints = DATAPOINTS_PLOTTING)
-
     normal_data.data_split_window(TRAIN_RATIO, VAL_RATIO, TEST_RATIO, WINDOW_SIZE)
     abnormal_data.dataset = abnormal_data.make_windows(abnormal_data.dataset, WINDOW_SIZE)
     
@@ -91,8 +113,10 @@ if __name__ == "__main__":
     else:
         save_load.load_data_json(normal_data, abnormal_data)
 
+
+    
     #autoencoder training
-    model = AnomalyDetector(OPTIMIZER, LOSS, normal_data.train_data, normal_data.val_data)
+    model = AnomalyDetector(OPTIMIZER, LOSS, normal_data.train_data, normal_data.val_data, WINDOW_SIZE)
     model.train(EPOCHS, BATCH_SIZE)
     model.plot_loss(PLOTS_FOLDER_PATH)
 
@@ -112,9 +136,6 @@ if __name__ == "__main__":
     mse_eval_abnormal = abnormal_eval.calc_mse()
     print(f"Difference between the mse of Normal and Anomalous predictions: {abs(mse_eval_normal - mse_eval_abnormal)}")
 
-    normal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
-    abnormal_eval.visualize(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
-
-
-    
+    normal_eval.visualize_window(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
+    abnormal_eval.visualize_window(NR_SAMPLES_VISUALIZE, PLOTS_FOLDER_PATH)
 

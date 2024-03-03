@@ -6,21 +6,20 @@ import os
 
 class Autoencoder(Model):
   # This is the constructor method for the Autoencoder class, where the architecture of the autoencoder is defined.
-  def __init__(self):
+  def __init__(self, window_size):
     #calls the constructor of the parent class (tf.keras.Model) to properly initialize the model.
     super(Autoencoder, self).__init__()
     self.encoder = tf.keras.Sequential([
-      layers.Dense(128, activation="relu", input_shape = (24 * 3, )),
-      layers.Dense(64, activation="relu"),
+      layers.Dense(64, activation="relu", input_shape = (window_size * 3, )),
       layers.Dense(32, activation="relu"),
       layers.Dense(16, activation="relu"),
       layers.Dense(8, activation="relu")]) # Smallest Layer Defined Here
-
+    
     self.decoder = tf.keras.Sequential([
+      layers.Dense(8, activation="relu"),
       layers.Dense(16, activation="relu"),
       layers.Dense(32, activation="relu"),
-      layers.Dense(64, activation="relu"),
-      layers.Dense((24 * 3), activation="sigmoid")])
+      layers.Dense((window_size * 3), activation="sigmoid")])
 
   #This method defines the forward pass of the autoencoder model. It takes the input x, which represents the ECG signals.
   #The x is first passed through the encoder, and the resulting compressed representation is obtained.
@@ -32,13 +31,13 @@ class Autoencoder(Model):
     return decoded
   
 class AnomalyDetector:
-    def __init__(self, optimizer, loss, train_data, val_data) -> None:
-        self.autoencoder = Autoencoder()
+    def __init__(self, optimizer, loss, train_data, val_data, window_size) -> None:
+        self.autoencoder = Autoencoder(window_size)
         self.autoencoder.compile(optimizer = optimizer, loss = loss)
 
         # Flatten the input data before feeding it into the model
-        self.train_data = train_data.reshape(-1, 24 * 3)
-        self.val_data = val_data.reshape(-1, 24 * 3)
+        self.train_data = train_data.reshape(-1, window_size * 3)
+        self.val_data = val_data.reshape(-1, window_size * 3)
 
         self.history = None
 
