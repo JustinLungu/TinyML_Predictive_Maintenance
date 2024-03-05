@@ -11,10 +11,10 @@ from keras.optimizers import Adam
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = False
+DO_PREPROCESSING = True
 
 #data preprocessing
-WINDOW_SIZE = 48
+WINDOW_SIZE = 96
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
@@ -23,10 +23,10 @@ DATAPOINTS_PLOTTING = 2000
 
 #hyperparameter tuning
 # Define the learning rate you want
-LEARNING_RATE = 0.01  # Change this to your desired learning rate
+LEARNING_RATE = 0.001  # Change this to your desired learning rate
 OPTIMIZER = "adam"
 LOSS = "mae"
-EPOCHS = 200
+EPOCHS = 400
 #NOTES: 256 minimal
 BATCH_SIZE = 2048
 NR_SAMPLES_VISUALIZE = 4
@@ -143,12 +143,6 @@ if __name__ == "__main__":
 
     normal_eval.predict(model.autoencoder)
     abnormal_eval.predict(model.autoencoder)
-
-
-    mse_eval_normal = normal_eval.calc_mse(type = "Normal")
-    print(normal_eval.data.shape[0])
-    mse_eval_abnormal = abnormal_eval.calc_mse(sample_size = normal_eval.data.shape[0], type = "Anomaly")
-    print(f"Difference between the mse of Normal and Anomalous predictions: {abs(mse_eval_normal - mse_eval_abnormal)}")
 
 
     mae_eval_normal = normal_eval.calc_mae(type = "Normal")
