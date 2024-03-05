@@ -15,11 +15,11 @@ class Autoencoder(Model):
       layers.Dense(64, activation="relu"),
       layers.Dense(32, activation="relu"),
       layers.Dense(16, activation="relu"),
-      layers.Dense(8, activation="relu")])
-      #layers.Dense(4, activation="relu")])# Smallest Layer Defined Here
+      layers.Dense(8, activation="relu"),
+      layers.Dense(4, activation="relu")])# Smallest Layer Defined Here
     
     self.decoder = tf.keras.Sequential([
-      #layers.Dense(8, activation="relu"),
+      layers.Dense(8, activation="relu"),
       layers.Dense(16, activation="relu"),
       layers.Dense(32, activation="relu"),
       layers.Dense(64, activation="relu"),
@@ -47,11 +47,12 @@ class AnomalyDetector:
         self.history = None
 
     def train(self, nr_epochs, nr_batches):
+        print(self.train_data.shape)
         self.history = self.autoencoder.fit(self.train_data, self.train_data,
-          epochs = nr_epochs,
-          batch_size = nr_batches,
-          validation_data=(self.val_data, self.val_data),
-          shuffle=True)
+                                            epochs = nr_epochs,
+                                            batch_size = nr_batches,
+                                            validation_data=(self.val_data, self.val_data),
+                                            shuffle=False)
         
         return self.history
     

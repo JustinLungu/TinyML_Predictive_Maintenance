@@ -7,6 +7,7 @@ from save_model import Save_Model
 from evaluation import Evaluation
 
 import matplotlib.pyplot as plt
+from keras.optimizers import Adam
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
@@ -21,11 +22,13 @@ DATA_SHAPE = 3 #x,y,z accelerometer data
 DATAPOINTS_PLOTTING = 2000
 
 #hyperparameter tuning
+# Define the learning rate you want
+LEARNING_RATE = 0.01  # Change this to your desired learning rate
 OPTIMIZER = "adam"
-LOSS = "mse"
-EPOCHS = 20
+LOSS = "mae"
+EPOCHS = 200
 #NOTES: 256 minimal
-BATCH_SIZE = 1024
+BATCH_SIZE = 2048
 NR_SAMPLES_VISUALIZE = 4
 
 #Paths to save/load
@@ -62,7 +65,7 @@ def normalization(normal_data: Data, abnormal_data: Data):
     train = normal_data.train_data
     val = normal_data.val_data
     test = normal_data.test_data
-    plot_data(test[1], "Test before")
+    plot_data(train[1], "Train before")
 
     train = train.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
     val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
@@ -76,7 +79,7 @@ def normalization(normal_data: Data, abnormal_data: Data):
     normal_data.val_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
     normal_data.test_data = test.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
 
-    plot_data(normal_data.test_data[1], "Test after")
+    plot_data(normal_data.train_data[1], "Train after")
 
     #abnormal data (the entire dataset)
     abnormal = abnormal_data.dataset
@@ -124,7 +127,9 @@ if __name__ == "__main__":
 
     
     #autoencoder training
-    model = AnomalyDetector(OPTIMIZER, LOSS, normal_data.train_data, normal_data.val_data, WINDOW_SIZE)
+    # Instantiate the Adam optimizer with the new learning rate
+    optimizer = Adam(learning_rate=LEARNING_RATE)
+    model = AnomalyDetector(optimizer, LOSS, normal_data.train_data, normal_data.val_data, WINDOW_SIZE)
     model.train(EPOCHS, BATCH_SIZE)
     model.plot_loss(PLOTS_FOLDER_PATH)
 
