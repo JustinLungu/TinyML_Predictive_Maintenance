@@ -11,7 +11,7 @@ from keras.optimizers import Adam
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = False
+DO_PREPROCESSING = True
 
 #data preprocessing
 WINDOW_SIZE = 96
