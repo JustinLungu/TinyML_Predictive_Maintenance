@@ -117,6 +117,9 @@ if __name__ == "__main__":
 
     normal_data = Data(capture = "1", hertz = "60", volume = "30")
     abnormal_data = Data(capture = "2", hertz = "40", volume = "60")
+
+    #normal_data = Data(capture = "2", hertz = "40", volume = "60")
+    #abnormal_data = Data(capture = "1", hertz = "60", volume = "30")
     save_load = Saving_Loading(DATA_FOLDER_PATH)
 
     if DO_PREPROCESSING == True:
