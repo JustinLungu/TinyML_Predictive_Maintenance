@@ -15,11 +15,11 @@ class Autoencoder(Model):
       layers.Dense(64, activation="relu"),
       layers.Dense(32, activation="relu"),
       layers.Dense(16, activation="relu"),
-      layers.Dense(8, activation="relu"),
-      layers.Dense(4, activation="relu")])# Smallest Layer Defined Here
+      layers.Dense(8, activation="relu")])
+      #layers.Dense(4, activation="relu")])# Smallest Layer Defined Here
     
     self.decoder = tf.keras.Sequential([
-      layers.Dense(8, activation="relu"),
+      #layers.Dense(8, activation="relu"),
       layers.Dense(16, activation="relu"),
       layers.Dense(32, activation="relu"),
       layers.Dense(64, activation="relu"),

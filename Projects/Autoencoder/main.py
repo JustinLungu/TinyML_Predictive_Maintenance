@@ -11,7 +11,7 @@ from keras.optimizers import Adam
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = True
+DO_PREPROCESSING = False
 
 #data preprocessing
 WINDOW_SIZE = 96
@@ -26,9 +26,9 @@ DATAPOINTS_PLOTTING = 2000
 LEARNING_RATE = 0.001  # Change this to your desired learning rate
 OPTIMIZER = "adam"
 LOSS = "mae"
-EPOCHS = 400
+EPOCHS = 600
 #NOTES: 256 minimal
-BATCH_SIZE = 2048
+BATCH_SIZE = 1024
 NR_SAMPLES_VISUALIZE = 4
 
 #Paths to save/load

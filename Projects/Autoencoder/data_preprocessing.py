@@ -78,7 +78,7 @@ class Data:
         start = 0
         while start< data.count():
             yield int(start), int(start + size)
-            start += (size/2)
+            start += (size/6)
 
     def make_windows(self, data, window_size):
         segments = np.empty((0,window_size,3))
