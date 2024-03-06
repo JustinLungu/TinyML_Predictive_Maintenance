@@ -78,6 +78,7 @@ class Data:
         start = 0
         while start< data.count():
             yield int(start), int(start + size)
+            # divided by 10 such that we can get more data for training
             start += (size/10)
 
     def make_windows(self, data, window_size):
