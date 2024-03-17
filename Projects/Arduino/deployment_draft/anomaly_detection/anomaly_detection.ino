@@ -11,6 +11,7 @@
 // import model
 #include "autoencoder_model.h"
 
+#define DEGUG 0
 
 namespace{
   const tflite::Model* model = nullptr;
@@ -22,42 +23,7 @@ namespace{
   // if there are issues allocatingmemory in the code - might be from here, make the number higher
   constexpr int kTensorArenaSize = 20000;
   alignas(16) uint8_t tensor_arena[kTensorArenaSize]; //uint8_t tensor_arena[kTensorArenaSize];;// idk what the differrence here is and what the stuff does so just try both
-
-  // Min-Max scaling parameters
-    float min_vals[3]; // Assuming 3 axes for accelerometer data
-    float max_vals[3];
 }
-
-
-void min_max_scale_fit(const float* data, int size) {
-
-    for(int i = 0; i < 3; ++i){
-      min_vals[i] = {99};
-      max_vals[i] = {0};
-    }
-
-    for (int i = 0; i < size; i += 3) {
-      min_vals[0] = min(min_vals[0], data[i]);
-      max_vals[0] = max(max_vals[0], data[i]);
-
-      min_vals[1] = min(min_vals[1], data[i+1]);
-      max_vals[1] = max(max_vals[1], data[i+1]);
-
-      min_vals[2] = min(min_vals[2], data[i+2]);
-      max_vals[2] = max(max_vals[2], data[i+2]);
-    }
-}
-
-void min_max_transform(float* data, int size) {
-    for (int i = 0; i < size; i += 3) {
-      data[i] = (data[i] - min_vals[0]) / (max_vals[0] - min_vals[0]);
-
-      data[i+1] = (data[i+1] - min_vals[1]) / (max_vals[1] - min_vals[1]);
-
-      data[i+2] = (data[i+2] - min_vals[2]) / (max_vals[2] - min_vals[2]);
-    }
-}
-
 
 
 void setup() {
@@ -100,62 +66,55 @@ void setup() {
 
 void loop() {
 
-  float buffer[72] = {0};
-  float mse = 0.0;
+  float buffer[288] = {0};
+  float mae = 0.0;
   float diff = 0.0;
-  float sumSquaredDiff = 0.0;
+  float sumAbsDiff = 0.0;
   int readingsTaken = 0;
 
   Serial.println("Reading: ");
   // Read 24 readings from accelerometer
-  for(int i = 0; i < 72; i += 3){
+  for(int i = 0; i < 288; i += 3){
       if (IMU.accelerationAvailable()) {
         IMU.readAcceleration(buffer[i], buffer[i+1], buffer[i+2]);
-        Serial.print(buffer[i]);
-        Serial.print("   ");
-        Serial.print(buffer[i+1]);
-        Serial.print("   ");
-        Serial.println(buffer[i+2]);
-        readingsTaken++; // Increment the number of readings taken
+        buffer[i] = (buffer[i] + 2) / 4;
+        buffer[i+1] = (buffer[i+1] + 2) / 4;
+        buffer[i+2] = (buffer[i+2] + 2) / 4;
+        #if DEBUG
+          Serial.print(buffer[i]);
+          Serial.print("   ");
+          Serial.print(buffer[i+1]);
+          Serial.print("   ");
+          Serial.println(buffer[i+2]);
+          readingsTaken++; // Increment the number of readings taken
+        #endif
       } else {
         i -= 3;
       }
   }
 
-  // Print the number of readings taken
-  Serial.print("Readings taken: ");
-  Serial.println(readingsTaken);
-
-  Serial.println("Reading Window Done");
-
-
-  // Normalize data using Min-Max scaling
-  min_max_scale_fit(buffer, 72);
-  min_max_transform(buffer, 72);
-
-  Serial.println("Printing normalized data:");
-  //print normalized data
-  for(int i = 0; i < 72; i += 3){
-      Serial.print(buffer[i]);
-      Serial.print("   ");
-      Serial.print(buffer[i+1]);
-      Serial.print("   ");
-      Serial.println(buffer[i+2]);
-  }
-  
+  #if DEBUG
+    // Print the number of readings taken
+    Serial.print("Readings taken: ");
+    Serial.println(readingsTaken);
+    Serial.println("Reading Window Done");
+  #endif
 
   
   int j = 0;
   // Copy data to the input tensor
-  for (int i = 0; i < 24; ++i) {
+  for (int i = 0; i < 96; ++i) {
       input->data.f[i] = buffer[j]; // Copy the first element of each row
-      input->data.f[i + 24] = buffer[j+1]; // Copy the second element of each row
-      input->data.f[i + 48] = buffer[j+2]; // Copy the third element of each row
+      input->data.f[i + 96] = buffer[j+1]; // Copy the second element of each row
+      input->data.f[i + 192] = buffer[j+2]; // Copy the third element of each row
       j += 3;
   }
 
-  Serial.println("Input for model done");
-  
+  #if DEBUG
+    Serial.println("Input for model done");
+  #endif
+
+
   // Run inference, and report any error. Call the invoke function and check for errors
   TfLiteStatus invoke_status = interpreter->Invoke();
   if (invoke_status != kTfLiteOk) {
@@ -164,38 +123,40 @@ void loop() {
   }
   Serial.println("Invoke Successful");
 
-  float output_buffer[72] = {0};
+  float output_buffer[288] = {0};
 
   j = 0;
   // Copy data to the input tensor
-  for (int i = 0; i < 24; ++i) {
+  for (int i = 0; i < 96; ++i) {
       output_buffer[j] = output->data.f[i]; // Copy the first element of each row
-      output_buffer[j+1] = output->data.f[i + 24]; // Copy the second element of each row
-      output_buffer[j+2] = output->data.f[i + 48]; // Copy the third element of each row
+      output_buffer[j+1] = output->data.f[i + 96]; // Copy the second element of each row
+      output_buffer[j+2] = output->data.f[i + 192]; // Copy the third element of each row
       j += 3;
   }
 
-  Serial.println("Output for model done");
+  #if DEBUG
+    Serial.println("Output for model done");
 
-  // Read 24 readings from model output
-  for(int i = 0; i < 24; ++i){
-        Serial.print(output_buffer[i]);
-        Serial.print("   ");
-        Serial.print(output_buffer[i+1]);
-        Serial.print("   ");
-        Serial.println(output_buffer[i+2]);
-  }
+    // Read 24 readings from model output
+    for(int i = 0; i < 96; ++i){
+          Serial.print(output_buffer[i]);
+          Serial.print("   ");
+          Serial.print(output_buffer[i+1]);
+          Serial.print("   ");
+          Serial.println(output_buffer[i+2]);
+    }
+  #endif
 
   // calculate the mean squared error
-  sumSquaredDiff = 0.0;
-  for (int i = 0; i < 72; ++i) {
-      diff = buffer[i] - output_buffer[i];
-      sumSquaredDiff += diff * diff;
+  sumAbsDiff = 0.0;
+  for (int i = 0; i < 288; ++i) {
+      diff = abs(buffer[i] - output_buffer[i]);
+      sumAbsDiff += diff;
   }
-  mse = sumSquaredDiff / 72;
+  mae = sumAbsDiff / 288;
 
-  Serial.print("Mean Squared Error: ");
-  Serial.println(mse);
+  Serial.print("Mean Absolute Error: ");
+  Serial.println(mae);
   Serial.print("Miliseconds: ");
   Serial.println(millis());
   
