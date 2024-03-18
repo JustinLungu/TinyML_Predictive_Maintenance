@@ -14,7 +14,7 @@ class Autoencoder(Model):
       layers.Dense(128, activation="relu"),
       layers.Dense(64, activation="relu"),
       layers.Dense(32, activation="relu"),
-      layers.Dense(16, activation="tanh"), # Smallest Layer Defined Here
+      layers.Dense(16, activation="relu"), # Smallest Layer Defined Here
       #layers.Dropout(0.5),
       #layers.GaussianNoise(0.2)
       ])
