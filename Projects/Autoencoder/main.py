@@ -14,7 +14,7 @@ from keras.optimizers import Adam
 DO_PREPROCESSING = True
 
 #data preprocessing
-WINDOW_SIZE = 96
+WINDOW_SIZE = 24
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.2
 TEST_RATIO = 0.1
