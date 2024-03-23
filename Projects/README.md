@@ -12,3 +12,8 @@ Not sure that the quantization works, although trying to do a classification wit
 
 
 - the Arduino folder contains code to deploy models
+
+
+- 50 KB works with 2000 KTensorArea (doesn't give error anymore regarding size when uploading)
+- 9 MIL KTensorArea does not work
+- dont go over 250KB length size in your .h file for deploying the model
