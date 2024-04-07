@@ -19,6 +19,9 @@ float calculateMSE(float data1[][24], float data2[][24], int rows, int cols) {
 }
 
 int main() {
+
+    cout << 45 / 101000 << endl;
+
     const int rows = 3;
     const int cols = 24;
 
