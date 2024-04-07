@@ -13,14 +13,14 @@ class Autoencoder(Model):
       layers.Dense(64, activation="relu", input_shape = (window_size * 3, )),
       layers.Dense(32, activation="relu"),
       layers.Dense(16, activation="relu"),
-      layers.Dense(8, activation="relu"),
-      layers.Dense(4, activation="relu"), # Smallest Layer Defined Here
+      #layers.Dense(8, activation="relu"),
+      #layers.Dense(4, activation="relu"), # Smallest Layer Defined Here
       #layers.Dense(16, activation="tanh")
       #layers.GaussianNoise(0.2)
       ])
     
     self.decoder = tf.keras.Sequential([
-      layers.Dense(8, activation="relu"),
+      #layers.Dense(8, activation="relu"),
       layers.Dense(16, activation="relu"),
       layers.Dense(32, activation="relu"),
       layers.Dense((window_size * 3), activation="sigmoid")])
