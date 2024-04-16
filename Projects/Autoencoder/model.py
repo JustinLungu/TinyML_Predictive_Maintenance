@@ -3,6 +3,7 @@ from keras import layers, losses
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import os
+import pickle
 
 class Autoencoder(Model):
   # This is the constructor method for the Autoencoder class, where the architecture of the autoencoder is defined.
