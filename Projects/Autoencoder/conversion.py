@@ -13,6 +13,8 @@ OPTIMIZER = "adam"
 LOSS = "mae"
 MODELS_FOLDER_PATH = "Models/Autoencoder/autoencoder_model.h5"
 
+
+###################################### LOADING THE H5 WEIGHTS #############################
 # Recreate the model
 model = Autoencoder(WINDOW_SIZE)
 
@@ -23,6 +25,8 @@ _ = model(dummy_input)
 
 # Load the weights
 model.load_weights(MODELS_FOLDER_PATH)
+############################################################################################
+
 
 data_60hz30vol_normalized = [0.5075, 0.4825, 0.675 , 0.475 , 0.51 , 0.8 , 
                              0.5075, 0.4825, 0.6775, 0.475 , 0.51 , 0.8 , 
