@@ -2,7 +2,8 @@ import numpy as np
 import sys
 from data_preprocessing import Data, Preprocessing
 from save_load_data import Saving_Loading
-from model import AnomalyDetector
+import model
+from model import Autoencoder
 from save_model import Save_Model
 from evaluation import Evaluation
 
@@ -110,7 +111,11 @@ def manipulate_data(normal_data, abnormal_data, save_load):
     # Save the preprocessed data in the specified folder
     save_load.save_data_json(normal_data, abnormal_data)
 
+
+
 if __name__ == "__main__":
+
+    ############################## DATA MANIPULATION #####################################
     #set the threshhold of prinitng data to console to maximum value
     #so avoid the loss of data on console while displaying
     np.set_printoptions(threshold=sys.maxsize)
@@ -132,23 +137,27 @@ if __name__ == "__main__":
 
 
     
-    #autoencoder training
-    # Instantiate the Adam optimizer with the new learning rate
-    optimizer = Adam(learning_rate=LEARNING_RATE)
-    model = AnomalyDetector(optimizer, LOSS, normal_data.train_data, normal_data.val_data, WINDOW_SIZE)
-    model.train(EPOCHS, BATCH_SIZE)
-    model.plot_loss(PLOTS_FOLDER_PATH)
+    ######################## AUTOENCODER TRAINING #################################
+    autoencoder = Autoencoder(WINDOW_SIZE)
+    autoencoder.compile(optimizer = Adam(learning_rate=LEARNING_RATE), loss = LOSS)
 
-    #save model
+    # Flatten the input data before feeding it into the model
+    train_data = normal_data.train_data.reshape(-1, WINDOW_SIZE * 3)
+    val_data = normal_data.val_data.reshape(-1, WINDOW_SIZE * 3)
+
+    history = model.train(EPOCHS, BATCH_SIZE, autoencoder, train_data, val_data)
+    model.plot_loss(PLOTS_FOLDER_PATH, history)
+
+    ######################## SAVING MODEL ###########################################
     save_model = Save_Model()
-    save_model.save(model.autoencoder, MODELS_FOLDER_PATH)
+    save_model.save(autoencoder, MODELS_FOLDER_PATH)
 
-    #evaluation
+    ########################## EVALUATION ###########################################
     normal_eval = Evaluation(normal_data.test_data, "Normal", WINDOW_SIZE)
     abnormal_eval = Evaluation(abnormal_data.dataset, "Anomalous", WINDOW_SIZE)
 
-    normal_eval.predict(model.autoencoder)
-    abnormal_eval.predict(model.autoencoder)
+    normal_eval.predict(autoencoder)
+    abnormal_eval.predict(autoencoder)
 
 
     mae_eval_normal = normal_eval.calc_mae(type = "Normal")

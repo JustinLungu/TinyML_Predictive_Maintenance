@@ -36,7 +36,7 @@ class Save_Model():
         subprocess.run(['sed', '-i', f's/{replace_text}/g_model/g', model_cc_path])
 
     def _save_as_h5(self, model, filepath):
-        model.save(filepath)
+        model.save_weights(filepath)
 
     # Function to save model as .tflite
     def _save_as_tflite(self, model, filepath):

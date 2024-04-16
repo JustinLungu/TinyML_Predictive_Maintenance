@@ -34,41 +34,32 @@ class Autoencoder(Model):
     decoded = self.decoder(encoded)
     return decoded
   
-class AnomalyDetector:
-    def __init__(self, optimizer, loss, train_data, val_data, window_size) -> None:
-        self.autoencoder = Autoencoder(window_size)
-        self.autoencoder.compile(optimizer = optimizer, loss = loss)
 
-        # Flatten the input data before feeding it into the model
-        self.train_data = train_data.reshape(-1, window_size * 3)
-        self.val_data = val_data.reshape(-1, window_size * 3)
 
-        self.history = None
-
-    def train(self, nr_epochs, nr_batches):
-        print(self.train_data.shape)
-        self.history = self.autoencoder.fit(self.train_data, self.train_data,
-                                            epochs = nr_epochs,
-                                            batch_size = nr_batches,
-                                            validation_data=(self.val_data, self.val_data),
-                                            shuffle=False)
-        
-        return self.history
+def train(nr_epochs, nr_batches, autoencoder, train_data, val_data):
+    #print(train_data.shape)
+    history = autoencoder.fit(train_data, train_data,
+                              epochs = nr_epochs,
+                              batch_size = nr_batches,
+                              validation_data=(val_data, val_data),
+                              shuffle=False)
     
-    def plot_loss(self, folder_path):
+    return history
 
-        plt.plot(self.history.history["loss"], label="Training Loss")
-        plt.plot(self.history.history["val_loss"], label="Validation Loss")
-        plt.legend()
-        plt.xlabel("Epoch")
-        plt.ylabel("Loss")
-        plt.title("Training and Validation Loss")
-        
-        # Create the Plots folder if it doesn't exist
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+def plot_loss(folder_path, history):
 
-        plt.savefig(os.path.join(folder_path, "overfitting_plot.png"))
-        plt.show()
+    plt.plot(history.history["loss"], label="Training Loss")
+    plt.plot(history.history["val_loss"], label="Validation Loss")
+    plt.legend()
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss")
+    
+    # Create the Plots folder if it doesn't exist
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    plt.savefig(os.path.join(folder_path, "overfitting_plot.png"))
+    plt.show()
         
 
