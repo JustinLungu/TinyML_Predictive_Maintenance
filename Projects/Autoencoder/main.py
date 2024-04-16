@@ -9,6 +9,9 @@ from evaluation import Evaluation
 import matplotlib.pyplot as plt
 from keras.optimizers import Adam
 
+#setting the seed
+np.random.seed(42)
+
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
 DO_PREPROCESSING = False
@@ -26,7 +29,7 @@ DATAPOINTS_PLOTTING = 2000
 LEARNING_RATE = 0.001  # Change this to your desired learning rate
 OPTIMIZER = "adam"
 LOSS = "mae"
-EPOCHS = 100
+EPOCHS = 20
 #NOTES: 256 minimal
 BATCH_SIZE = 1024
 NR_SAMPLES_VISUALIZE = 4

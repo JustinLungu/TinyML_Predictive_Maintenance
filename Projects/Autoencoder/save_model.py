@@ -10,6 +10,10 @@ class Save_Model():
         # Save models in different formats
         self._create_folder_if_not_exists(folder_path)
 
+        #Save as .h5
+        h5_filepath = os.path.join(folder_path, "autoencoder_model.h5")
+        self._save_as_h5(model, h5_filepath)
+
         # Save as .tflite
         tflite_filepath = os.path.join(folder_path, "autoencoder_model.tflite")
         tflite_model = self._save_as_tflite(model, tflite_filepath)
@@ -30,6 +34,9 @@ class Save_Model():
         model_cc_path = os.path.join(folder_path, 'autoencoder.cc')
         replace_text = "model_tflite".replace('/', '_').replace('.', '_')
         subprocess.run(['sed', '-i', f's/{replace_text}/g_model/g', model_cc_path])
+
+    def _save_as_h5(self, model, filepath):
+        model.save(filepath)
 
     # Function to save model as .tflite
     def _save_as_tflite(self, model, filepath):
