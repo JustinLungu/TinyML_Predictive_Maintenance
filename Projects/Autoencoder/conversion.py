@@ -11,7 +11,9 @@ WINDOW_SIZE = 1
 LEARNING_RATE = 0.001  # Change this to your desired learning rate
 OPTIMIZER = "adam"
 LOSS = "mae"
-MODELS_FOLDER_PATH = "Models/Autoencoder/autoencoder_model.h5"
+H5_PATH = "Models/Autoencoder/autoencoder_model.h5"
+MODELS_FOLDER_PATH = "Models/Autoencoder/H5_Conversion"
+MODEL_NAME = "autoencoder_model"
 
 
 ###################################### LOADING THE H5 WEIGHTS #############################
@@ -23,9 +25,29 @@ model = Autoencoder(WINDOW_SIZE)
 dummy_input = tf.zeros((1, WINDOW_SIZE * 3))
 _ = model(dummy_input)
 
-# Load the weights
-model.load_weights(MODELS_FOLDER_PATH)
+# Load the weights of h5 model (keras model)
+model.load_weights(H5_PATH)
 ############################################################################################
+
+##################################### CONVERTING FROM H5 MODEL #############################
+
+#convert keras model to a tflite model
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+open(join(MODELS_FOLDER_PATH, MODEL_NAME) + '.tflite', 'wb').write(tflite_model)
+
+#construct header file
+hex_array = [format(val, '#04x') for val in tflite_model]
+c_model = c_writer.create_array(np.array(hex_array), 'unsigned char', MODEL_NAME)
+header_str = c_writer.create_header(c_model, MODEL_NAME)
+
+# save c header file
+with open(join(MODELS_FOLDER_PATH, MODEL_NAME) + '.h', 'w') as file:
+    file.write(header_str)
+#############################################################################################
+
+
+###################################### TEST INFERENCE #######################################
 
 
 data_60hz30vol_normalized = [0.5075, 0.4825, 0.675 , 0.475 , 0.51 , 0.8 , 
@@ -41,6 +63,10 @@ data_60hz30vol_normalized = [0.5075, 0.4825, 0.675 , 0.475 , 0.51 , 0.8 ,
                              0.505 , 0.4825, 0.69 , 0.48 , 0.5075, 0.795 , 
                              0.505 , 0.485 , 0.6925, 0.48 , 0.5075, 0.795]
 input_data_test = np.array(data_60hz30vol_normalized)
+
+print(input_data_test.shape)
+
+# I will copy the code from google colab used to run inference as before
 
 
 
