@@ -1,8 +1,6 @@
 from os.path import join
 import numpy as np
-import matplotlib.pyplot as plt
 import tensorflow as tf
-from scipy import stats
 import c_writer
 from model import Autoencoder
 import numpy as np
