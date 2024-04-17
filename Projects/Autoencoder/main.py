@@ -15,7 +15,7 @@ np.random.seed(42)
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = False
+DO_PREPROCESSING = True
 
 #data preprocessing
 WINDOW_SIZE = 1
@@ -75,9 +75,17 @@ def normalization(normal_data: Data, abnormal_data: Data):
     val = val.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
     test = test.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
 
-    train = preprocess.normalize_by_2(train)
-    val = preprocess.normalize_by_2(val)
-    test = preprocess.normalize_by_2(test)
+    train = preprocess.min_max_scale_fit(train)
+    val = preprocess.min_max_transform(val)
+    test = preprocess.min_max_transform(test)
+
+    train = np.round(train, 2) 
+    val = np.round(val, 2) 
+    test = np.round(test, 2)
+
+    #train = preprocess.normalize_by_2(train)
+    #val = preprocess.normalize_by_2(val)
+    #test = preprocess.normalize_by_2(test)
 
     normal_data.train_data = train.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
     normal_data.val_data = val.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
@@ -92,7 +100,9 @@ def normalization(normal_data: Data, abnormal_data: Data):
     plot_data(abnormal_plot, "Anomalous before")
 
     abnormal = abnormal.reshape(-1, WINDOW_SIZE * DATA_SHAPE)
-    abnormal = preprocess.normalize_by_2(abnormal)
+    abnormal = preprocess.min_max_scale_fit(abnormal)
+    abnormal = np.round(abnormal, 2)
+    #abnormal = preprocess.normalize_by_2(abnormal)
     abnormal_data.dataset = abnormal.reshape(-1, WINDOW_SIZE, DATA_SHAPE)
 
     abnormal_plot = abnormal_data.dataset[1]
