@@ -84,10 +84,22 @@ class Save_Model():
 
 
 class Load_Model():
-    def load_tflite(self, filepath):
+    def predict_tflite(self, filepath, input_data):
         interpreter = tf.lite.Interpreter(model_path=filepath)
         interpreter.allocate_tensors()
-        return interpreter
+
+        #Set input tensors
+        input_data = input_data.astype(np.float32)
+        input_index = interpreter.get_input_details()[0]['index']
+        interpreter.set_tensor(input_index, input_data)
+
+        #Invoke inference
+        interpreter.invoke()
+
+        #Retrieve output tensors
+        output_index = interpreter.get_output_details()[0]['index']
+        output_data = interpreter.get_tensor(output_index)
+        return output_data
 
     def load_pkl(self, filepath):
         return joblib.load(filepath)
