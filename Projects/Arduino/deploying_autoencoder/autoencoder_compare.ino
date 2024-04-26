@@ -28,12 +28,13 @@ namespace{
   TfLiteTensor* input = nullptr;
   TfLiteTensor* output = nullptr;
   int INPUT_LENGTH = 72;
+  float TRESHOLD = 0.004;  // Treshold calculated by looking at MAE values from the train and test set and their mean and std
 
 
   // Set aside some memory (arena) - used to perform calculations and store the input and output buffers
   // if there are issues allocatingmemory in the code - might be from here, make the number higher
   constexpr int kTensorArenaSize = 10 * 1024;
-  alignas(16) uint8_t tensor_arena[kTensorArenaSize]; //uint8_t tensor_arena[kTensorArenaSize];;// idk what the differrence here is and what the stuff does so just try both
+  alignas(16) uint8_t tensor_arena[kTensorArenaSize]; 
 }
 
 
@@ -91,6 +92,9 @@ void setup() {
     return;
   }
 
+  pinMode(LEDR, OUTPUT); //LEDR
+  pinMode(LEDR, OUTPUT); // LEDR
+
   input = interpreter->input(0);
   output = interpreter->output(0);
 }
@@ -98,12 +102,24 @@ void setup() {
 
 void loop() {
   
-  // data from 60 HZ 30 vol
+  // data from 60 HZ 30 vol, already normalized
   float inputData[INPUT_LENGTH] = {0.5075, 0.4825, 0.675 , 0.475 , 0.51 , 0.8 , 0.5075, 0.4825, 0.6775, 0.475 , 0.51 , 0.8 , 0.5075, 0.4825, 0.6775, 0.4775, 0.51 , 0.8 , 0.5075, 0.4825, 0.68 , 0.4775, 0.51 , 0.7975, 0.505 , 0.4825, 0.6825, 0.4775, 0.51 , 0.7975, 0.505 , 0.4825, 0.6825, 0.4775, 0.51 , 0.7975, 0.505 , 0.4825, 0.685 , 0.4775, 0.51 , 0.7975, 0.505 , 0.4825, 0.685 , 0.48 , 0.51 , 0.7975, 0.505 , 0.4825, 0.6875, 0.48 , 0.5075, 0.795 , 0.505 , 0.4825, 0.6875, 0.48 , 0.5075, 0.795 , 0.505 , 0.4825, 0.69 , 0.48 , 0.5075, 0.795 , 0.505 , 0.485 , 0.6925, 0.48 , 0.5075, 0.795
   };
 
   //3x1 input
   //float inputData[INPUT_LENGTH] = {0.5075, 0.4825, 0.675};
+
+  // used to read data from the accelerometer as input for the model  
+  float inputBuffer[INPUT_LENGTH] = {0};
+
+  // Read 24 readings from accelerometer
+  for(int i = 0; i < INPUT_LENGTH; i += 3){
+      if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(inputBuffer[i], inputBuffer[i + 1], inputBuffer[i + 2]);
+      }
+  }
+  Serial.println("Reading Window Done");
+
 
   float buffer[INPUT_LENGTH] = {0.0};
   float mae = 0.0;
@@ -113,7 +129,7 @@ void loop() {
 
   
   for (int i = 0; i < INPUT_LENGTH; ++i) {
-    input->data.f[i] = inputData[i]; 
+    input->data.f[i] = (inputBuffer[i] + 2)/4; //inputData[i]; 
   }
 
   // Run inference, and report any error. Call the invoke function and check for errors
@@ -122,7 +138,7 @@ void loop() {
     MicroPrintf("Invoke failed");
     return;
   }
-  Serial.println("Invoke Successful");
+  //Serial.println("Invoke Successful");
 
   float output_buffer[INPUT_LENGTH] = {0};
 
@@ -131,18 +147,13 @@ void loop() {
       output_buffer[i] = output->data.f[i]; 
   }
 
-  #if DEBUG
-    Serial.println("Output for model done");
+  Serial.println("THE INPUT WAS");
 
-    // Read 24 readings from model output
-    for(int i = 0; i < 96; ++i){
-          Serial.print(output_buffer[i]);
+  for(int i = 0; i < INPUT_LENGTH; ++i){
+          Serial.print((inputBuffer[i] + 2)/4, 8);
           Serial.print("   ");
-          Serial.print(output_buffer[i+1]);
-          Serial.print("   ");
-          Serial.println(output_buffer[i+2]);
-    }
-  #endif
+  }
+  Serial.println(" ");
 
   for(int i = 0; i < INPUT_LENGTH; ++i){
           Serial.print(output_buffer[i], 8);
@@ -160,6 +171,18 @@ void loop() {
   Serial.println(" ");
   Serial.print("Mean Absolute Error: ");
   Serial.println(mae, 5);
+
+  if(mae > TRESHOLD) {
+    // annomaly, turn red on
+    digitalWrite(LEDR, LOW);
+    digitalWrite(LEDB, HIGH);
+
+  } else {
+    //normal data, turn blue on
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDB, LOW);
+  }
+
   Serial.print("Miliseconds: ");
   Serial.println(millis());
   
