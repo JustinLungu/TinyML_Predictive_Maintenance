@@ -85,8 +85,8 @@ if __name__ == "__main__":
     print('NORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_norm)) + np.average(mae_array_norm))
 
 
-    mae_per_window(abnormal_data.dataset, load_model, mae_array_abnorm)
-    mae_array_abnorm = np.asarray(mae_array_abnorm)
-    print('ABNORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_abnorm)) + np.average(mae_array_abnorm))
+    #mae_per_window(abnormal_data.dataset, load_model, mae_array_abnorm)
+    #mae_array_abnorm = np.asarray(mae_array_abnorm)
+    #print('ABNORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_abnorm)) + np.average(mae_array_abnorm))
 
     
