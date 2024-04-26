@@ -85,37 +85,36 @@ class Save_Model():
 
 class Load_Model():
     def predict_tflite(self, filepath, input_data):
-        interpreter = tf.lite.Interpreter(model_path=filepath)
+        # Load TFLite model and allocate tensors.
+        interpreter = tf.lite.Interpreter(model_path= filepath + "/autoencoder_model.tflite")
         interpreter.allocate_tensors()
 
-        #Set input tensors
-        input_data = input_data.astype(np.float32)
-        input_index = interpreter.get_input_details()[0]['index']
-        interpreter.set_tensor(input_index, input_data)
+        # Get input and output tensors.
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
 
-        #Invoke inference
+        # Test model on random input data.
+        test_dataa = tf.expand_dims(tf.convert_to_tensor(input_data, dtype=tf.float32), 0)
+
+        input_data = test_dataa
+        interpreter.set_tensor(input_details[0]['index'], input_data)
+
+
         interpreter.invoke()
 
-        #Retrieve output tensors
-        output_index = interpreter.get_output_details()[0]['index']
-        output_data = interpreter.get_tensor(output_index)
+        # The function `get_tensor()` returns a copy of the tensor data.
+        # Use `tensor()` in order to get a pointer to the tensor.
+        output_data = interpreter.get_tensor(output_details[0]['index'])
         return output_data
-
-    def load_pkl(self, filepath):
-        return joblib.load(filepath)
 
     def load_c_array(self, array, array_len):
         # Convert C array to numpy array
         byte_array = np.frombuffer(array, dtype=np.uint8)
         return byte_array[:array_len]
 
-    def load_from_folder(self, folder_path):
-        # Load TFLite model
-        tflite_filepath = os.path.join(folder_path, "autoencoder_model.tflite")
-        tflite_model = self.load_tflite(tflite_filepath)
-
+    def load_pkl(self, folder_path):
         # Load Pickle model
         pkl_filepath = os.path.join(folder_path, "autoencoder_model.pkl")
         pkl_model = self.load_pkl(pkl_filepath)
 
-        return tflite_model, pkl_model
+        return pkl_model
