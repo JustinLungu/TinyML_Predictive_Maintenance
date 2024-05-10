@@ -115,7 +115,7 @@ if __name__ == "__main__":
     random_seed = 42
     np.random.seed(random_seed)
 
-    normal_data = Data(capture = "4", hertz = "60", volume = "30")
+    normal_data = Data(capture = "4", hertz = "75", volume = "50")
     abnormal_data = Data(capture = "2", hertz = "40", volume = "60")
 
     #normal_data = Data(capture = "2", hertz = "40", volume = "60")
