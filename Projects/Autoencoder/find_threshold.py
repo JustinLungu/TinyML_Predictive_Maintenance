@@ -52,6 +52,7 @@ def mae_per_window(data, model: Load_Model, mae_array):
         window = window.reshape(72)
         output = model.predict_tflite(MODELS_FOLDER_PATH, window)
         mae_window = calc_mae(window, output)
+        #print(mae_window)
         mae_array.append(mae_window)
 
 
@@ -87,8 +88,8 @@ if __name__ == "__main__":
     load_model = Load_Model()
 
 
-    mae_per_window(normal_data.train_data, load_model, mae_array_norm)
-    mae_per_window(normal_data.val_data, load_model, mae_array_norm)
+    #mae_per_window(normal_data.train_data, load_model, mae_array_norm)
+    #mae_per_window(normal_data.val_data, load_model, mae_array_norm)
     mae_per_window(normal_data.test_data, load_model, mae_array_norm)
 
     mae_array_norm = np.asarray(mae_array_norm)
