@@ -11,7 +11,7 @@ from keras.optimizers import Adam
 
 #if you modify any constant make sure to set this to true
 #otherwise you can keep it at false
-DO_PREPROCESSING = False
+DO_PREPROCESSING = True
 
 #data preprocessing
 WINDOW_SIZE = 24
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     random_seed = 42
     np.random.seed(random_seed)
 
-    normal_data = Data(capture = "1", hertz = "60", volume = "30")
+    normal_data = Data(capture = "4", hertz = "60", volume = "30")
     abnormal_data = Data(capture = "2", hertz = "40", volume = "60")
 
     #normal_data = Data(capture = "2", hertz = "40", volume = "60")
