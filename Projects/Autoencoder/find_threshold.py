@@ -55,6 +55,17 @@ def mae_per_window(data, model: Load_Model, mae_array):
         mae_array.append(mae_window)
 
 
+def calculate_thresholds(mae_array):
+    mean_mae = np.mean(mae_array)
+    std_mae = np.std(mae_array)
+
+    # Defining a range from 2 standard deviations below the mean to 3 above
+    lower_bound = mean_mae - 2 * std_mae
+    upper_bound = mean_mae + 3 * std_mae
+
+    return lower_bound, upper_bound
+
+
 if __name__ == "__main__":
     #set the threshhold of prinitng data to console to maximum value
     #so avoid the loss of data on console while displaying
@@ -82,8 +93,11 @@ if __name__ == "__main__":
 
     mae_array_norm = np.asarray(mae_array_norm)
     
-    print('NORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_norm)) + np.average(mae_array_norm))
+    #print('NORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_norm)) + np.average(mae_array_norm))
 
+    # Calculate the threshold range for normal conditions
+    lower_threshold, upper_threshold = calculate_thresholds(mae_array_norm)
+    print(f'Normal Data Threshold Range: Lower = {lower_threshold}, Upper = {upper_threshold}')
 
     #mae_per_window(abnormal_data.dataset, load_model, mae_array_abnorm)
     #mae_array_abnorm = np.asarray(mae_array_abnorm)
