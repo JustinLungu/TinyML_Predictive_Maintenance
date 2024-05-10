@@ -99,8 +99,4 @@ if __name__ == "__main__":
     lower_threshold, upper_threshold = calculate_thresholds(mae_array_norm)
     print(f'Normal Data Threshold Range: Lower = {lower_threshold}, Upper = {upper_threshold}')
 
-    #mae_per_window(abnormal_data.dataset, load_model, mae_array_abnorm)
-    #mae_array_abnorm = np.asarray(mae_array_abnorm)
-    #print('ABNORMAL Recommended threshold (3x std dev + avg):', (3*np.std(mae_array_abnorm)) + np.average(mae_array_abnorm))
-
     
