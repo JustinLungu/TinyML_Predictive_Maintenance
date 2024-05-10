@@ -233,6 +233,6 @@ void loop() {
   Serial.println(millis());
   
 
-  delay(10000);
+  delay(2000);
 
 }
