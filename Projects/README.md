@@ -1,3 +1,10 @@
+In this folder you will find the Convolutional Neural Network (CNN), Autoencoder, and Arduino code, each in its own folder.
+- In the CNN folder we have, written in a jupyter notebook, the code to create the CNN model.
+- In the Autoencoder folder, we have the code written in python, as well as some additional plots and saved preprocessed data.
+- In the Arduino folder, we have for each project the code (.ino) to run on the microcontroller, and the two useful models (.h and .tflite) from which the .h file is used by the .ino file.
+
+
+*Additional notes*:
 - autoencoder_v1.ipynb
 The code used so far for the autoencoder and cnn in google colab
 
