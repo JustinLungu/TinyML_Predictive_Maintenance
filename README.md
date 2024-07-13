@@ -10,3 +10,6 @@ We will approach this task by building and training two models. One will be a co
 
 Useful links for Edge Impulse - board setup:
 - https://docs.edgeimpulse.com/docs/edge-ai-hardware/mcu/arduino-nano-33-ble-sense
+
+
+In order to re-connect with the board via Edge Impulse website, run this command in terminal: **edge-impulse-daemon** and you're all set.
