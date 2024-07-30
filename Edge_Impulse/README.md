@@ -88,15 +88,19 @@ sudo apt install screen
 ## Connecting a device via Edge Impulse:
 
 1. Make sure your device is connected to your machine
-2. 
+2. Pres the reset button twice (check the pulsating yellow LED)
+3. Then download the [latest edge impulse firmware](https://cdn.edgeimpulse.com/firmware/arduino-nano-33-ble-sense.zip) for your machine.
+4. Depending on your machine extract the correct file to your computer. Open the flash script for your operating system (flash_windows.bat, flash_mac.command or flash_linux.sh) to flash the firmware.
+5. Wait until flashing is complete, and press the RESET button ONCE to launch the new firmware.
+6. Open a terminal on your device and run ```edge-impulse-daemon```. This will start a wizard which will ask you to log in, and choose an Edge Impulse project. If you want to switch projects run the command with ```--clean```.
+7. Enter your account credentials in the terminal
+8. Choose a project you want to add your device on (an already existing one from the edge impulse platform)
+9. Give your device a name
+10. If the device appears with a green dot in the device tab on edge impulse, then you're all set.
 
-Useful links for Edge Impulse - board setup:
-- https://docs.edgeimpulse.com/docs/edge-ai-hardware/mcu/arduino-nano-33-ble-sense
-- https://docs.edgeimpulse.com/docs/edge-impulse-studio/deployment
-- might help with deployment issue: https://forum.edgeimpulse.com/t/arduino-deployment-not-visible/4614/2
+**NOTE**: When reconnecting to a project which know about the board all you need to run in the terminal is:
+```
+edge-impulse-daemon
+```
 
-Re-connecting to an already existing project:
-  In order to re-connect with the board via Edge Impulse website, run this command in terminal: **edge-impulse-daemon** and you're all set.
 
-Creating a new project with an already connected board:
-  The only difference is that now, once you've created the project no the website, you then run the following command in the terminal: **edge-impulse-daemon --clean**. Then, you enter your username/e-mail and password and again you're all set. You should see that the board is connected in the website interface.
