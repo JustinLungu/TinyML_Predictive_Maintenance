@@ -3,8 +3,7 @@
 
 ## Edge Impulse CLI installation:
 
-official documentation: https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-installation
-
+official documentation: https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-installation <br/> 
 Overview of the steps:
 1. Create an account on edge impulse
 2. have python3 installed on your machine
@@ -18,7 +17,7 @@ Overview of the steps:
 ### Steps for Linux:
 
 1. Go to [Edge Impulse Website](https://studio.edgeimpulse.com/login) and make an account
-2. Install [python3](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu) via the following commands:
+2. Install [python3](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu) via the following commands: <br/> 
 Update the Package Repository: ```sudo apt update``` <br/> 
 Install Python: ```sudo apt install python3```<br/> 
 Verify Installation: ```python3 --version``` <br/> 
