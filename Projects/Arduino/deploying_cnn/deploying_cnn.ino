@@ -92,11 +92,6 @@ void loop() {
   float buffer[24][3] = {0};
   int readingsTaken = 0;
 
-  // Serial.println(input->dims->data[0]);
-  // Serial.println(input->dims->data[1]);
-  // Serial.println(input->dims->data[2]);
-  // Serial.println(input->dims->data[3]);
-
 
   // Read 24 readings from accelerometer
   for(int i = 0; i < 24; i += 1){
@@ -110,19 +105,6 @@ void loop() {
   }
 
 
-  // Serial.println("THE INPUT WAS");
-
-  // for(int i = 0; i < 24; ++i){
-  //         Serial.print(buffer[i][0]);
-  //         Serial.print("   ");
-  //         Serial.print(buffer[i][1]);
-  //         Serial.print("   ");
-  //         Serial.print(buffer[i][2]);
-
-  // }
-  // Serial.println(" ");
-
-  // float buffer[INPUT_LENGTH] = {0.0};
   float mae = 0.0;
   float diff = 0.0;
   float sumAbsDiff = 0.0;
@@ -135,13 +117,6 @@ void loop() {
     input->data.f[i+48] = (buffer[i][2] + 2)/4; //inputData[i]; 
   }
 
-  // // Serial.println("THE INPUT Normalized WAS");
-
-  // // for(int i = 0; i < INPUT_LENGTH; ++i){
-  // //         Serial.print(input->data.f[i], 8);
-  // //         Serial.print("   ");
-  // // }
-  // // Serial.println(" ");
 
 
   // Run inference, and report any error. Call the invoke function and check for errors
