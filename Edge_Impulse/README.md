@@ -1,7 +1,8 @@
 # How to use Edge Impulse with Windows and/or Linux
 
+## Installing dependencies to connect your Arduino board with Edge Impulse:
 
-## Edge Impulse CLI installation:
+### Edge Impulse CLI installation:
 
 official documentation: https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-installation <br/> 
 Overview of the steps:
@@ -10,11 +11,11 @@ Overview of the steps:
 3. have node.js version 20 or above installed on your machine
 4. install the CLI tools
 
-### Steps for Windows:
+#### Steps for Windows:
 
 1. Go to [Edge Impulse Website](https://studio.edgeimpulse.com/login) and make an account
 
-### Steps for Linux:
+#### Steps for Linux:
 
 1. Go to [Edge Impulse Website](https://studio.edgeimpulse.com/login) and make an account
 2. Install [python3](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu) via the following commands: <br/> 
@@ -47,7 +48,10 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
 npm install -g edge-impulse-cli
 ```
 
+### Connecting a device via Edge Impulse:
 
+1. Make sure your device is connected to your machine
+2. 
 
 Useful links for Edge Impulse - board setup:
 - https://docs.edgeimpulse.com/docs/edge-ai-hardware/mcu/arduino-nano-33-ble-sense
