@@ -14,6 +14,15 @@ Overview of the steps:
 #### Steps for Windows:
 
 1. Go to [Edge Impulse Website](https://studio.edgeimpulse.com/login) and make an account
+2. Install [Node.js](https://nodejs.org/en/)
+     - install the Additional Node.js tools (called Tools for Native Modules on newer versions) when prompted.
+4.  Install CLI tools
+```
+npm install -g edge-impulse-cli --force
+```
+Notes:
+- make sure you are on the correct PATH
+- use the Node.js command prompt
 
 #### Steps for Linux:
 
@@ -47,6 +56,7 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
 ```
 npm install -g edge-impulse-cli
 ```
+
 ### Arduino CLI installation:
 #### Steps for Windows:
 official link: https://www.youtube.com/watch?v=1jMWsFER-Bc
@@ -88,7 +98,7 @@ sudo apt install screen
 ## Connecting a device via Edge Impulse:
 
 1. Make sure your device is connected to your machine
-2. Pres the reset button twice (check the pulsating yellow LED)
+2. Press the reset button twice (check the pulsating yellow LED)
 3. Then download the [latest edge impulse firmware](https://cdn.edgeimpulse.com/firmware/arduino-nano-33-ble-sense.zip) for your machine.
 4. Depending on your machine extract the correct file to your computer. Open the flash script for your operating system (flash_windows.bat, flash_mac.command or flash_linux.sh) to flash the firmware.
 5. Wait until flashing is complete, and press the RESET button ONCE to launch the new firmware.
