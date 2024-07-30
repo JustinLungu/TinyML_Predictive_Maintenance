@@ -25,8 +25,22 @@ sudo apt install python3
 python3 --version
 ```
 
-4. Install [node.js]() via the following commands:
+3. Install [node.js]() via the following commands:
 ```
+curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+node -v
+```
+The last command should return the node version, v20 or above. <br/>
+Verify the node installation directory:
+```
+npm config get prefix
+```
+If it returns /usr/local/, run the following commands to change npm's default directory:
+```
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
 ```
 4. Install the CLI tools via the following command: 
 ```
