@@ -21,15 +21,17 @@ Overview of the steps:
  - Update the Package Repository:<br/>
 ```
 sudo apt update
-``` <br/> 
+```
+
  - Install Python:<br/> 
 ```
 sudo apt install python3
-```<br/> 
+```
+
  - Verify Installation:<br/> 
 ```
 python3 --version
-``` <br/> 
+``` 
 
 4. Install [node.js]() via the following commands:
 ```
