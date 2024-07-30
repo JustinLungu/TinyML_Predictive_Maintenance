@@ -55,27 +55,37 @@ official link: https://www.youtube.com/watch?v=1jMWsFER-Bc
 #### Steps for Linux:
 official link: https://arduino.github.io/arduino-cli/1.0/installation/
 ##### Installing Homebrew:
-Install Prerequisites:
+ - Install Prerequisites:
 ```
 sudo apt update
 sudo apt install build-essential procps curl file git
 ```
-Install Homebrew:
+ - Install Homebrew:
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
-Add Homebrew to PATH:
+ - Add Homebrew to PATH:
 ```
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile
 ```
-Then, apply the changes:
+ - Then, apply the changes:
 ```
 source ~/.profile
 ```
 
-After being ablew to use the ***brew*** command we can now install arduino CLI:
+After being able to use the ***brew*** command, we can now on. The Arduino CLI is available as a Homebrew formula since version 0.5.0:
+```
+brew update
+brew install arduino-cli
+```
 
-### Connecting a device via Edge Impulse:
+### Final step for Linux only:
+Install GNU screen:
+```
+sudo apt install screen
+```
+
+## Connecting a device via Edge Impulse:
 
 1. Make sure your device is connected to your machine
 2. 
