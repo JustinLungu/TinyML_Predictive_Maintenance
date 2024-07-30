@@ -18,11 +18,20 @@ Overview of the steps:
 
 1. Go to [Edge Impulse Website](https://studio.edgeimpulse.com/login) and make an account
 2. Install [python3](https://phoenixnap.com/kb/how-to-install-python-3-ubuntu) via the following commands: <br/> 
-Update the Package Repository: ```sudo apt update``` <br/> 
-Install Python: ```sudo apt install python3```<br/> 
-Verify Installation: ```python3 --version``` <br/> 
+ - Update the Package Repository:<br/>
+```
+sudo apt update
+``` <br/> 
+ - Install Python:<br/> 
+```
+sudo apt install python3
+```<br/> 
+ - Verify Installation:<br/> 
+```
+python3 --version
+``` <br/> 
 
-3. Install [node.js]() via the following commands:
+4. Install [node.js]() via the following commands:
 ```
 ```
 4. Install the CLI tools via the following command: 
