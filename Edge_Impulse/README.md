@@ -47,6 +47,33 @@ echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.profile
 ```
 npm install -g edge-impulse-cli
 ```
+### Arduino CLI installation:
+#### Steps for Windows:
+official link: https://www.youtube.com/watch?v=1jMWsFER-Bc
+
+
+#### Steps for Linux:
+official link: https://arduino.github.io/arduino-cli/1.0/installation/
+##### Installing Homebrew:
+Install Prerequisites:
+```
+sudo apt update
+sudo apt install build-essential procps curl file git
+```
+Install Homebrew:
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+Add Homebrew to PATH:
+```
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.profile
+```
+Then, apply the changes:
+```
+source ~/.profile
+```
+
+After being ablew to use the ***brew*** command we can now install arduino CLI:
 
 ### Connecting a device via Edge Impulse:
 
