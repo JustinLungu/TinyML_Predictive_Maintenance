@@ -1,3 +1,28 @@
+# How to use Edge Impulse with Windows and/or Linux
+
+
+## Edge Impulse CLI installation:
+
+official documentation: https://docs.edgeimpulse.com/docs/tools/edge-impulse-cli/cli-installation
+
+Overview of the steps:
+1. Create an account on edge impulse
+2. have python3 installed on your machine
+3. have node.js version 20 or above installed on your machine
+4. install the CLI tools
+
+### Steps for Windows:
+
+
+
+### Steps for Linux:
+
+
+
+
+
+
+
 Useful links for Edge Impulse - board setup:
 - https://docs.edgeimpulse.com/docs/edge-ai-hardware/mcu/arduino-nano-33-ble-sense
 - https://docs.edgeimpulse.com/docs/edge-impulse-studio/deployment
