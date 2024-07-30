@@ -29,7 +29,7 @@ Verify Installation: python3 --version
 ```
 4. Install the CLI tools via the following command: 
 ```
-npm install -g edge-impulse-cli
+**npm install -g edge-impulse-cli**
 ```
 
 
