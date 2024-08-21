@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "config": {
+        "edgeimpulse.com": {
+            "name": "CNN_reproduced",
+            "type": "transferLearning",
+            "description": "The CNN model of Predictive Maintenance reproduced as a Custom Learning Block. Simple CNN for vibration pattern classification.",
+            "organizationId": 138853,
+            "tlOperatesOn": "other",
+            "tlIndRequiresGpu": false,
+            "id": 5654
+        }
+    }
+}

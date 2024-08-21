@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "config": {
+        "edgeimpulse.com": {
+            "name": "Autoencoder_Custom",
+            "type": "transferLearning",
+            "description": "Autoencoder for Predictive Maintenance using Anomaly Detection",
+            "organizationId": 138853,
+            "tlOperatesOn": "regression",
+            "tlIndRequiresGpu": false
+        }
+    }
+}
