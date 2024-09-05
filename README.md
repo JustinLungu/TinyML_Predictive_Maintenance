@@ -8,4 +8,4 @@ The project we are conducting, namely processing the sensor data on-board the ro
 We will approach this task by building and training two models. One will be a convolutional neural network, which specializes in classifying different types of vibrations, while the other is an autoencoder, which focuses on reconstructing learned signals (both of which can be found in the Project folder). We will use both to attempt to detect anomalies in accelerometer data. 
 
 
-
+Abaqus Ubuntu installation guide: https://github.com/franaudo/abaqus-ubuntu#run-setup
